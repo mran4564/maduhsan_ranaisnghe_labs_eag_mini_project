@@ -36,7 +36,6 @@ public class ApplicationExceptionHandler  {
                         .status(HttpStatus.CONFLICT)
                         .message(e.getMessage())
                         .uri(request.getRequestURI())
-                        .trace(e.getStackTrace()[0])
                         .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
                         .build(), HttpStatus.CONFLICT);
     }
@@ -51,7 +50,6 @@ public class ApplicationExceptionHandler  {
                         .status(HttpStatus.NOT_FOUND)
                         .message(e.getMessage())
                         .uri(request.getRequestURI())
-                        .trace(e.getStackTrace()[0])
                         .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
                         .build(), HttpStatus.NOT_FOUND);
     }

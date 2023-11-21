@@ -15,5 +15,4 @@ public class ErrorResponse {
     private String message;
     private String uri;
     private ZonedDateTime timeStamp;
-    private StackTraceElement trace;
 }
