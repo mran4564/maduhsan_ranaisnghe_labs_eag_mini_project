@@ -1,4 +1,4 @@
-package org.b2b_system.product.dto;
+package org.b2b_system.product.dto.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
