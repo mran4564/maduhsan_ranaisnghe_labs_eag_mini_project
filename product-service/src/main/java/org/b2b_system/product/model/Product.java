@@ -23,7 +23,7 @@ public class Product {
     private String name;
     private UUID productId;
     private String description;
-    private int stock;
+    private int stockCount;
     private String imageUrl;
     private boolean isInStock;
     private UUID categoryId;
