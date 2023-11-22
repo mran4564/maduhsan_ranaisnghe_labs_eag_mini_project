@@ -1,25 +1,41 @@
 package org.b2b_system.product.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.b2b_system.product.dto.CreateCategoryRequest;
-import org.b2b_system.product.dto.CategoryResponse;
+import org.b2b_system.product.dto.category.CategoryRequest;
+import org.b2b_system.product.dto.category.CategoryResponse;
 import org.b2b_system.product.service.CategoryService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/category")
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @PostMapping("/create")
     public ResponseEntity<CategoryResponse> createCategory(
-             CreateCategoryRequest request
+            @RequestBody @Valid CategoryRequest request
     ) {
         return ResponseEntity.ok(categoryService.createCategory(request));
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CategoryResponse>> getAll() {
+
+        return ResponseEntity.ok(categoryService.getAllCategories());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponse> updateCategoryDetails(
+            @PathVariable("id") UUID id , @RequestBody CategoryRequest request
+    ) {
+        return ResponseEntity.ok(categoryService.updateCategoryDetails(id,request));
+    }
+
 }

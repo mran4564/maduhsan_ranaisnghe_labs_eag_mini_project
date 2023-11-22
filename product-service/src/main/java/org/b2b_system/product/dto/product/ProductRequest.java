@@ -1,4 +1,4 @@
-package org.b2b_system.product.dto;
+package org.b2b_system.product.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,14 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponse {
+public class ProductRequest {
 
-    private UUID categoryId;
     private String name;
     private String description;
+    private UUID supplierId;
+    private UUID categoryId;
+    private int stockCount;
+    private String imageUrl;
+    private boolean isInStock;
+    private String brandName;
 }
