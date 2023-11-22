@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 
 @Data
 @Builder
@@ -17,4 +19,6 @@ public class UpdateProductRequest {
     private int stockCount;
     private String imageUrl;
     private boolean isInStock;
+    private BigDecimal price;
+
 }
