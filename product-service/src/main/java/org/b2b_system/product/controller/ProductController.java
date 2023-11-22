@@ -13,22 +13,29 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/product")
+@RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     private final  ProductService productService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<ProductResponse> createCategory(
             @RequestBody @Valid ProductRequest request
     ) {
         return ResponseEntity.ok(productService.createProduct(request));
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<ProductResponse>> getAll() {
         return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProductDetails(
+            @PathVariable("id") UUID id
+    ) {
+        return ResponseEntity.ok(productService.getProductDetails(id));
     }
 
     @PutMapping("/{id}")

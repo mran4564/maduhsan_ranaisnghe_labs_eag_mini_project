@@ -18,14 +18,14 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<CategoryResponse> createCategory(
             @RequestBody @Valid CategoryRequest request
     ) {
         return ResponseEntity.ok(categoryService.createCategory(request));
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<CategoryResponse>> getAll() {
 
         return ResponseEntity.ok(categoryService.getAllCategories());

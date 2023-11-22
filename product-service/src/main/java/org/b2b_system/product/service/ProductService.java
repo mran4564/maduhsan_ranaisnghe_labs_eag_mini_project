@@ -49,6 +49,19 @@ public class ProductService {
     }
 
     /**
+     *  Get Product Details by ProductId
+     * @param id product Id
+     * @return product Details
+     */
+    public ProductResponse getProductDetails(UUID id) {
+        var product = productRepository.findByProductId(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Incorrect product_id or product with id - %s does not exist".formatted(id)));
+
+        return  mapProductToResponse(product);
+    }
+
+    /**
      * Update the product details
      * @param id productId of the product
      * @param request details of the product needed to be updated
@@ -64,6 +77,7 @@ public class ProductService {
         product.setStockCount(request.getStockCount());
         product.setInStock(request.isInStock());
         product.setImageUrl(request.getImageUrl());
+        product.setPrice(request.getPrice());
         var updatedCategory = productRepository.save(product);
         logger.info("Product Updated successfully");
 
@@ -81,6 +95,7 @@ public class ProductService {
                 .stockCount(product.getStockCount())
                 .imageUrl(product.getImageUrl())
                 .brandName(product.getBrandName())
+                .price(product.getPrice())
                 .build();
 
     }
@@ -96,7 +111,9 @@ public class ProductService {
                 .stockCount(request.getStockCount())
                 .imageUrl(request.getImageUrl())
                 .brandName(request.getBrandName())
+                .price(request.getPrice())
                 .build();
     }
+
 
 }
