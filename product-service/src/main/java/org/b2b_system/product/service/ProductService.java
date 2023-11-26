@@ -10,9 +10,10 @@ import org.b2b_system.product.model.Product;
 import org.b2b_system.product.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,6 +25,7 @@ public class ProductService {
 
     /**
      * create new product
+     *
      * @param request ProductRequest Data
      * @return product Response
      */
@@ -40,30 +42,37 @@ public class ProductService {
     }
 
     /**
-     * Get All the products
+     * Get All the products with Filters applied
+     *
+     * @param categoryId category Id
+     * @param brandName  Brand of the supplier
      * @return list of productResponse objects
      */
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return  products.stream().map(this::mapProductToResponse).toList();
+    public Page<ProductResponse> getAllProducts(Pageable pageable, UUID categoryId,
+                                                String brandName, Boolean isInStock) {
+        return productRepository
+                .findProductMatch(categoryId, brandName, isInStock, pageable)
+                .map(this::mapProductToResponse);
     }
 
     /**
-     *  Get Product Details by ProductId
+     * Get Product Details by ProductId
+     *
      * @param id product Id
      * @return product Details
      */
     public ProductResponse getProductDetails(UUID id) {
         var product = productRepository.findByProductId(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Incorrect product_id or product with id - %s does not exist".formatted(id)));
+                        "Product with id - %s does not exist".formatted(id)));
 
-        return  mapProductToResponse(product);
+        return mapProductToResponse(product);
     }
 
     /**
      * Update the product details
-     * @param id productId of the product
+     *
+     * @param id      productId of the product
      * @param request details of the product needed to be updated
      * @return ProductResponse
      */
@@ -82,6 +91,22 @@ public class ProductService {
         logger.info("Product Updated successfully");
 
         return mapProductToResponse(updatedCategory);
+    }
+
+    /**
+     * Delete Product by id
+     *
+     * @param id product Id
+     * @return String message
+     */
+    public String deleteProduct(UUID id) {
+        var product = productRepository.findByProductId(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Incorrect product_id or product with id - %s does not exist".formatted(id)));
+        productRepository.delete(product);
+        logger.info("Product deleted successfully");
+
+        return "Product deleted successfully";
     }
 
     private ProductResponse mapProductToResponse(Product product) {
@@ -114,6 +139,5 @@ public class ProductService {
                 .price(request.getPrice())
                 .build();
     }
-
 
 }
