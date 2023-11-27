@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryRequest {
-    @NotBlank(message = "Product Name is required")
+    @NotBlank(message = "Category Name is required")
     private String name;
     private String description;
 }
