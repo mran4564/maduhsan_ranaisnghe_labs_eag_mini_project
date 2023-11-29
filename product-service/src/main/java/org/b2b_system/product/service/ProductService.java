@@ -7,7 +7,9 @@ import org.b2b_system.product.dto.product.ProductResponse;
 import org.b2b_system.product.dto.product.UpdateProductRequest;
 import org.b2b_system.product.exception.EntityAlreadyExistsException;
 import org.b2b_system.product.model.Product;
+import org.b2b_system.product.repository.CategoryRepository;
 import org.b2b_system.product.repository.ProductRepository;
+import org.b2b_system.product.utils.ErrorMessages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     Logger logger = LoggerFactory.getLogger(ProductService.class);
+    private final CategoryRepository categoryRepository;
 
     /**
      * create new product
@@ -32,6 +35,9 @@ public class ProductService {
     public ProductResponse createProduct(ProductRequest request) {
         if (productRepository.existsByName(request.getName())) {
             throw new EntityAlreadyExistsException("Product %s already exists".formatted(request.getName()));
+        }
+        if(!categoryRepository.existsByCategoryId(request.getCategoryId())){
+            throw new EntityNotFoundException("Category with id %s is not available".formatted(request.getCategoryId()));
         }
 
         var product = mapRequestToProduct(request);
@@ -64,7 +70,7 @@ public class ProductService {
     public ProductResponse getProductDetails(UUID id) {
         var product = productRepository.findByProductId(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Product with id - %s does not exist".formatted(id)));
+                        ErrorMessages.ProductNotFound.formatted(id)));
 
         return mapProductToResponse(product);
     }
@@ -79,7 +85,7 @@ public class ProductService {
     public ProductResponse updateProductDetails(UUID id, UpdateProductRequest request) {
         var product = productRepository.findByProductId(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Incorrect product_id or product with id - %s does not exist".formatted(id)));
+                        ErrorMessages.ProductNotFound.formatted(id)));
 
         product.setName(request.getName());
         product.setDescription(request.getDescription());
@@ -107,6 +113,17 @@ public class ProductService {
         logger.info("Product deleted successfully");
 
         return "Product deleted successfully";
+    }
+
+    public ProductResponse updateProductStock(UUID id, int quantity, boolean increase) {
+        var product = productRepository.findByProductId(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        ErrorMessages.ProductNotFound.formatted(id)));
+        product.updateStock(increase,quantity);
+        var updatedProduct = productRepository.save(product);
+        logger.info("Product quantity updated successfully");
+
+        return mapProductToResponse(updatedProduct);
     }
 
     private ProductResponse mapProductToResponse(Product product) {
@@ -139,5 +156,4 @@ public class ProductService {
                 .price(request.getPrice())
                 .build();
     }
-
 }

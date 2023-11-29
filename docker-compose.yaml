@@ -1,0 +1,11 @@
+services:
+  mysql:
+    container_name: mysql-b2b
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: b2bapp
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+

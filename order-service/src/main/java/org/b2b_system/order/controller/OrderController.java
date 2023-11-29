@@ -26,14 +26,13 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrder(@PathVariable("id") UUID id ){
+    public ResponseEntity<OrderResponse> getOrder(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(orderService.getOrderByOrderId(id));
     }
 
     @GetMapping
-    public  ResponseEntity<List<OrderResponse>> getOrders(@RequestParam(name = "customer_id", required = false) UUID customerId){
-        return  ResponseEntity.ok(orderService.getOrders(customerId));
+    public ResponseEntity<List<OrderResponse>> getOrders(@RequestParam(name = "customer_id", required = false) UUID customerId) {
+        return ResponseEntity.ok(orderService.getOrders(customerId));
     }
-
 
 }

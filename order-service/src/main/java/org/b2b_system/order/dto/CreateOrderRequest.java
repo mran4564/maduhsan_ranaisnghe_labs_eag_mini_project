@@ -13,9 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateOrderRequest {
-
     private UUID customerId;
     private List<CreateOrderItemRequest> orderItemRequests;
     private String deliveryAddress;
-
 }

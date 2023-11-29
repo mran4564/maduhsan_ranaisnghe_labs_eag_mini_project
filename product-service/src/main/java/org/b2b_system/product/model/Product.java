@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.b2b_system.product.exception.InsufficientStockException;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -31,4 +32,16 @@ public class Product {
     private UUID supplierId;
     private String brandName;
     private BigDecimal price;
+
+    public void updateStock(boolean increase, int quantity){
+        if(increase){
+            this.stockCount += quantity;
+        }else{
+            if(this.stockCount < quantity){
+                throw new InsufficientStockException("Invalid quantity for update");
+            }
+            this.stockCount -= quantity;
+        }
+        this.isInStock = stockCount != 0;
+    }
 }

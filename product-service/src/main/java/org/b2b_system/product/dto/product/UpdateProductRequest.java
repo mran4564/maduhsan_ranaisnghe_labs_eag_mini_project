@@ -13,12 +13,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateProductRequest {
-
     private String name;
     private String description;
     private int stockCount;
     private String imageUrl;
     private boolean isInStock;
     private BigDecimal price;
-
 }

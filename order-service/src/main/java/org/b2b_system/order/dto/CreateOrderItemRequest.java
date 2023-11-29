@@ -13,7 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateOrderItemRequest {
-
     private UUID productId;
     private BigDecimal price;
     private int quantity;

@@ -22,6 +22,7 @@ public class User {
     private UUID userId;
     private String name;
     private String email;
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
     private String address;
 }
