@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface UserData {
   userId: string | null;
@@ -17,7 +18,7 @@ const initialState: AuthState = {
   refreshToken: null,
 };
 
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: 'auth',
   initialState: initialState,
   reducers: {
@@ -49,3 +50,27 @@ export const selectAccessToken = (state: { auth: { idToken: string } }) =>
   state.auth.idToken;
 export const selectRefreshToken = (state: { auth: { refreshToken: string } }) =>
   state.auth.refreshToken;
+
+export function AuthSlice() {
+  const userData = useSelector(
+    (state: { auth: { userData: UserData } }) => state.auth.userData
+  );
+  const idToken = useSelector(
+    (state: { auth: { idToken: string } }) => state.auth.idToken
+  );
+  const refreshToken = useSelector(
+    (state: { auth: { refreshToken: string } }) => state.auth.refreshToken
+  );
+  const dispatch = useDispatch();
+  return {
+    userData,
+    idToken,
+    refreshToken,
+    setCredentials: (payload: {
+      userId: string;
+      userRole: string;
+      idToken: string;
+      refreshToken: string;
+    }) => dispatch(setCredentials(payload)),
+  };
+}
