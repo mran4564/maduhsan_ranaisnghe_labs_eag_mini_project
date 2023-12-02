@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Box,
   Flex,
@@ -6,6 +8,7 @@ import {
   IconButton,
   Button,
   Menu,
+  Text,
   MenuButton,
   MenuList,
   MenuItem,
@@ -15,12 +18,14 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { FaShoppingCart } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   children: React.ReactNode;
 }
 
-const Links = ['Dashboard', 'Projects', 'Team'];
+const Links = ['Products', 'Orders'];
 
 const NavLink = (props: Props) => {
   const { children } = props;
@@ -28,12 +33,12 @@ const NavLink = (props: Props) => {
   return (
     <Box
       as="a"
-      px={2}
+      px={5}
       py={1}
       rounded={'md'}
       _hover={{
         textDecoration: 'none',
-        bg: useColorModeValue('gray.200', 'gray.700'),
+        bg: useColorModeValue('gray.300', 'gray.500'),
       }}
       href={'#'}
     >
@@ -43,11 +48,21 @@ const NavLink = (props: Props) => {
 };
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const logOut = (basePath = '/') => {
+    console.log('Logging out');
+
+    // Clear session storage
+    sessionStorage.clear();
+    // Navigate to the base path
+    navigate(basePath);
+  };
+
   return (
-    <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} boxShadow="md">
-      <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+    <Box bg={useColorModeValue('gray.100', 'gray.300')} px={8} boxShadow="md">
+      <Flex h={14} alignItems={'center'} justifyContent={'space-between'}>
         <IconButton
           size={'md'}
           icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -55,8 +70,10 @@ export default function Navbar() {
           display={{ md: 'none' }}
           onClick={isOpen ? onClose : onOpen}
         />
-        <HStack spacing={8} alignItems={'center'}>
-          <Box>Logo</Box>
+        <HStack mt={0} spacing={6} alignItems={'center'}>
+          <Text fontSize="xl" color="teal.500" fontWeight="bold">
+            SYSCO SHOP
+          </Text>
           <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
             {Links.map((link) => (
               <NavLink key={link}>{link}</NavLink>
@@ -64,6 +81,15 @@ export default function Navbar() {
           </HStack>
         </HStack>
         <Flex alignItems={'center'}>
+          <Button
+            variant={'solid'}
+            colorScheme={'teal'}
+            size={'sm'}
+            mr={4}
+            leftIcon={<FaShoppingCart size={15} />}
+          >
+            Cart
+          </Button>
           <Menu>
             <MenuButton
               as={Button}
@@ -80,10 +106,10 @@ export default function Navbar() {
               />
             </MenuButton>
             <MenuList>
-              <MenuItem>Link 1</MenuItem>
-              <MenuItem>Link 2</MenuItem>
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>Orders</MenuItem>
               <MenuDivider />
-              <MenuItem>Link 3</MenuItem>
+              <MenuItem onClick={() => logOut()}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </Flex>
