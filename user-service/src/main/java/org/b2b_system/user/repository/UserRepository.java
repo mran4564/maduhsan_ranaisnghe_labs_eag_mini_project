@@ -12,9 +12,12 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUserId(UUID id);
+    Optional<User> findByEmail(String email);
 
     @Query(value = "SELECT * FROM user u WHERE " +
             "(:user_role is null OR u.user_role = :user_role)", nativeQuery = true)
     Page<User> findUserMatch(@Param("user_role") String userType,
                                    Pageable pageable);
+
+
 }

@@ -22,6 +22,12 @@ public class UserService {
        return mapUserToResponse(userRepository.save(mapUserRequestToUser(request)));
     }
 
+    public UserResponse getUserByUserId(UUID id) {
+        return  userRepository.findByUserId(id).map(this::mapUserToResponse)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User with id - %s does not exist".formatted(id)));
+    }
+
     public Page<UserResponse> getAllUsers(Pageable pageRequest, String userType) {
         return userRepository
                 .findUserMatch(userType,pageRequest)
@@ -48,18 +54,4 @@ public class UserService {
                 .address(user.getAddress())
                 .build();
     }
-
-    public UserResponse getUserByUserId(UUID id) {
-        var user = userRepository.findByUserId(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "User with id - %s does not exist".formatted(id)));
-
-        return  UserResponse.builder()
-                .userId(user.getUserId())
-                .email(user.getEmail())
-                .address(user.getAddress())
-                .build();
-    }
-
-
 }
