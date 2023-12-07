@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import AuthService from '../service/auth.service';
-import AmazonCognitoIdentity from 'amazon-cognito-identity-js';
+import { UserCreateDTO } from '../model/auth.model';
 
 class AuthController {
   private authService: AuthService;
@@ -10,11 +10,10 @@ class AuthController {
   }
 
   async signUp(req: Request, res: Response): Promise<void> {
-    const { email, password } = req.body;
-
+    const userReq: UserCreateDTO = req.body;
     try {
-      const user = await this.authService.signUp(email, password);
-      res.status(201).json({ message: 'User registered successfully', user });
+      const data = await this.authService.signUp(userReq);
+      res.status(201).json({ message: 'User registered successfully', data });
     } catch (error) {
       res.status(500).json({ message: 'Error registering user', error });
     }
@@ -24,8 +23,8 @@ class AuthController {
     const { email, password } = req.body;
 
     try {
-      const session = await this.authService.signIn(email, password);
-      res.status(200).json({ message: 'User signed in successfully', session });
+      const data = await this.authService.signIn(email, password);
+      res.status(200).json({ message: 'User signed in successfully', data });
     } catch (error) {
       res.status(401).json({ message: 'Authentication failed', error });
     }

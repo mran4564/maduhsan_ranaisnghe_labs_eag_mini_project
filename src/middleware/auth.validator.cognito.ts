@@ -88,6 +88,7 @@ const validateTokenMiddleware = async (req: Request, res: Response, next: NextFu
 
 //Typescript way to define user field under the express Request.
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user: { name: string; email: string; id: string; roles: Array<string> };

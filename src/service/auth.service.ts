@@ -3,10 +3,13 @@ import {
   CognitoUser,
   CognitoUserAttribute,
   CognitoUserPool,
-  CognitoUserSession,
   CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
 import config from '../config/config';
+import { UserCreateDTO } from '../model/auth.model';
+import axios from 'axios';
+import { isValidStatus } from '../helpers/validator';
+import { v4 as uuidv4 } from 'uuid';
 
 class CognitoService {
   private userPool: CognitoUserPool;
@@ -18,22 +21,35 @@ class CognitoService {
     });
   }
 
-  async signUp(email: string, password: string) {
-    const attributeList = [new CognitoUserAttribute({ Name: 'custom:role', Value: 'customer' })];
-    const result = await new Promise<CognitoUser | undefined>((resolve, reject) => {
-      this.userPool.signUp(email, password, attributeList, [], (err, result) => {
+  async signUp(userRequest: UserCreateDTO) {
+    if (!isValidStatus(userRequest.role)) {
+      throw new Error(`Not a valid user type ${userRequest.role} }`);
+    }
+    userRequest.role = userRequest.role.toUpperCase();
+    const userId = uuidv4();
+    const attributeList = [
+      new CognitoUserAttribute({ Name: `custom:role`, Value: userRequest.role }),
+      new CognitoUserAttribute({ Name: `custom:userId`, Value: userId }),
+    ];
+    const result = await new Promise<CognitoUser>((resolve, reject) => {
+      this.userPool.signUp(userRequest.email, userRequest.password, attributeList, [], (err, result) => {
         if (err) {
           console.log(err);
           reject(err);
         } else {
-          resolve(result?.user);
+          if (result?.user) {
+            resolve(result?.user);
+          }
+          reject(result);
         }
       });
     });
-    return result;
+    const { name, email, role } = userRequest;
+    const savedUser = await axios.post(config.authApi, { userId, name, email, role });
+    return savedUser.data;
   }
 
-  async signIn(email: string, password: string): Promise<CognitoUserSession> {
+  async signIn(email: string, password: string): Promise<any> {
     const authenticationDetails = new AuthenticationDetails({
       Username: email,
       Password: password,
@@ -45,10 +61,16 @@ class CognitoService {
     };
 
     const cognitoUser = new CognitoUser(userData);
-
     return new Promise((resolve, reject) => {
       cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: (session) => resolve(session),
+        onSuccess: (session) => {
+          const idToken = session.getIdToken().getJwtToken();
+          const idTokenPayload = session.getIdToken().payload;
+          const refreshToken = session.getRefreshToken().getToken();
+          const userRole = idTokenPayload['custom:role'];
+          const userId = idTokenPayload['custom:userId'];
+          resolve({ userId, userRole, idToken, refreshToken });
+        },
         onFailure: (err) => reject(err),
       });
     });
@@ -68,7 +90,7 @@ class CognitoService {
       if (err) {
         console.log(err);
       } else {
-        let retObj = {
+        const retObj = {
           access_token: session.accessToken.jwtToken,
           id_token: session.idToken.jwtToken,
           refresh_token: session.refreshToken.token,
