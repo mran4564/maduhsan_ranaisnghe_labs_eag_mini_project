@@ -12,7 +12,11 @@ class ProductRoutes {
   }
 
   private initializeRoutes(): void {
-    this.router.post('/create', this.productController.createProduct.bind(this.productController));
+    this.router.post('', this.productController.createProduct.bind(this.productController));
+    this.router.get('', this.productController.getProducts.bind(this.productController));
+    this.router.get('/:id', this.productController.getProductById.bind(this.productController));
+    this.router.put('/:id', this.productController.updateProduct.bind(this.productController));
+    this.router.delete('/:id', this.productController.deleteProduct.bind(this.productController));
   }
 
   public getRouter(): Router {
