@@ -1,5 +1,8 @@
-import { Grid, GridItem, Show } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
 import Navbar from './NavBar.component';
+import React from 'react';
+
+const SupplierPortal = React.lazy(() => import('supplier-portal/Module'));
 
 const Dashboard = () => {
   return (
@@ -16,8 +19,7 @@ const Dashboard = () => {
       <GridItem area="nav">
         <Navbar />
       </GridItem>
-      <Show above="lg"></Show>
-      <GridItem area="main"></GridItem>
+      <SupplierPortal />
     </Grid>
   );
 };

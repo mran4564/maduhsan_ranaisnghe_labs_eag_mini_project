@@ -28,7 +28,7 @@ const AuthGuard = () => {
       });
       console.log(loadingState);
       setLoading(false);
-      navigate('/dashboard');
+      navigate('/b2b-app');
     } else {
       console.log(loadingState);
       navigate('/login');

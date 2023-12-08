@@ -25,7 +25,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const Links = ['Products', 'Orders'];
+const Links: string[] = [];
 
 const NavLink = (props: Props) => {
   const { children } = props;
@@ -33,13 +33,14 @@ const NavLink = (props: Props) => {
   return (
     <Box
       as="a"
-      px={5}
+      px={4}
       py={1}
-      rounded={'md'}
+      rounded={'sm'}
       _hover={{
         textDecoration: 'none',
         bg: useColorModeValue('gray.300', 'gray.500'),
       }}
+      fontSize={'sm'}
       href={'#'}
     >
       {children}
@@ -61,8 +62,8 @@ export default function Navbar() {
   };
 
   return (
-    <Box bg={useColorModeValue('gray.100', 'gray.300')} px={8} boxShadow="md">
-      <Flex h={14} alignItems={'center'} justifyContent={'space-between'}>
+    <Box bg={'white'} px={8} boxShadow="sm">
+      <Flex h={12} alignItems={'center'} justifyContent={'space-between'}>
         <IconButton
           size={'md'}
           icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -74,23 +75,19 @@ export default function Navbar() {
           <Text fontSize="xl" color="teal.500" fontWeight="bold">
             SYSCO SHOP
           </Text>
-          <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
+          <HStack as={'nav'} spacing={3} display={{ base: 'none', md: 'flex' }}>
             {Links.map((link) => (
               <NavLink key={link}>{link}</NavLink>
             ))}
           </HStack>
         </HStack>
         <Flex alignItems={'center'}>
-          <Button
-            variant={'solid'}
-            colorScheme={'teal'}
-            size={'sm'}
-            mr={4}
-            leftIcon={<FaShoppingCart size={15} />}
-          >
-            Cart
-          </Button>
-          <Menu>
+          <Box mr={'8'}>
+            <button>
+              <FaShoppingCart size={16} />
+            </button>
+          </Box>
+          <Menu size={'sm'}>
             <MenuButton
               as={Button}
               rounded={'full'}
@@ -105,7 +102,7 @@ export default function Navbar() {
                 }
               />
             </MenuButton>
-            <MenuList>
+            <MenuList fontSize={'sm'}>
               <MenuItem>Profile</MenuItem>
               <MenuItem>Orders</MenuItem>
               <MenuDivider />

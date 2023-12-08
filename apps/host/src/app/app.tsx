@@ -11,11 +11,10 @@ export function App() {
     <React.Suspense fallback={null}>
       <ChakraProvider>
         <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/" element={<Navigate to="/b2b-app" />} />
           <Route path="/*" element={<Auth />} />
           <Route element={<AuthGuard />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            {/* Handle other routes */}
+            <Route path="/b2b-app/*" element={<Dashboard />} />
           </Route>
         </Routes>
       </ChakraProvider>

@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "auth/Module": ["apps/auth/src/remote-entry.ts"],
-      "global-store/Module": ["apps/global-store/src/remote-entry.ts"]
+      "global-store/Module": ["apps/global-store/src/remote-entry.ts"],
+      "supplier-portal/Module": ["apps/supplier-portal/src/remote-entry.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
