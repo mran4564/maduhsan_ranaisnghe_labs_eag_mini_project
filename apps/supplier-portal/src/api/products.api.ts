@@ -11,7 +11,14 @@ export interface ProductResponse {
   brandName: string;
   inStock: boolean;
   price: number;
+  isApproved?: string;
 }
+
+export const ProductApproveStatusEnum = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+};
 
 export type Product = {
   name: string;
@@ -19,7 +26,16 @@ export type Product = {
   stockCount: string;
   instock: string;
   productId?: string;
+  isApproved?: string;
   price: number;
+};
+
+export type ProductPage = {
+  content: ProductResponse[];
+  currentPage: number;
+  totalPages: number;
+  pageSize: number;
+  totalElements: number;
 };
 
 export const columns: ReadonlyArray<Column<Product>> = [
@@ -43,6 +59,10 @@ export const columns: ReadonlyArray<Column<Product>> = [
     Header: 'Availability',
     accessor: 'instock',
   },
+  {
+    Header: 'Approved Status',
+    accessor: 'isApproved',
+  },
 ];
 
 export const formatRowData = (rawData: ProductResponse[]) =>
@@ -50,15 +70,17 @@ export const formatRowData = (rawData: ProductResponse[]) =>
     name: info.name,
     productId: info.productId,
     stockCount: info.stockCount,
-    instock: info.inStock ? 'available' : 'not available',
+    instock: info.inStock ? 'Avaiable' : 'not available',
     brandName: info.brandName,
+    isApproved: info.isApproved,
     price: info.price,
   }));
 
-export const getData = async (pageNo = 1) => {
+export const getData = async (pageNo = 0) => {
   const response = await fetch(
-    `http://localhost:8626/api/products?page=0&size=15`
+    `http://localhost:8626/api/products?page=${pageNo}&size=10`
   );
-  const data: ProductResponse[] = await response.json();
+
+  const data: ProductPage = await response.json();
   return data;
 };
