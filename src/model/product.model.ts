@@ -32,3 +32,11 @@ export interface ProductResponse {
   instock: boolean;
   price: number;
 }
+
+export interface PageResponse {
+  content: ProductResponse[];
+  currentPage: number;
+  totalPages: number;
+  pageSize: number;
+  totalElements: number;
+}

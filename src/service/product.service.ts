@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Request } from 'express';
-import { ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
+import { PageResponse, ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
 import config from '../config/config';
 
 class ProductService {
@@ -19,7 +19,14 @@ class ProductService {
         in_stock,
       },
     });
-    return response.data.content;
+    const responseData: PageResponse = {
+      content: response.data.content,
+      pageSize: response.data.size,
+      currentPage: response.data.pageable.pageNumber,
+      totalElements: response.data.totalElements,
+      totalPages: response.data.totalPages,
+    };
+    return responseData;
   }
   async getProductById(productId: string) {
     const response = await axios.get(config.productApi + `/${productId}`);

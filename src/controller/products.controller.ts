@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import ProductService from '../service/product.service';
 import { ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
+import { UserRoleEnum } from '../model/auth.model';
 
 const productService = new ProductService();
 

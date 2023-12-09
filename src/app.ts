@@ -3,12 +3,13 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import config from './config/config';
 import AuthRoutes from './route/auth.route';
-import { validateTokenMiddleware } from './middleware/auth.validator.cognito';
 import ProductRoutes from './route/products.route';
+import CategoryRoutes from './route/category.route';
 
 const app: Application = express();
 const authRoutes = new AuthRoutes();
 const productRoutes = new ProductRoutes();
+const categoryRoutes = new CategoryRoutes();
 
 const errorHandler: ErrorRequestHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
   if (error.response.data.message) {
@@ -27,8 +28,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes.getRouter());
 app.use('api/products', productRoutes.getRouter());
-app.use(validateTokenMiddleware);
 app.use('/api/products', productRoutes.getRouter());
+app.use('/api/category', categoryRoutes.getRouter());
 app.use(errorHandler);
 try {
   app.listen(config.port, (): void => {

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import ProductController from '../controller/products.controller';
+import { Roles, authorize } from '../middleware/auth.validator.cognito';
 
 class ProductRoutes {
   private router: Router;
@@ -14,9 +15,17 @@ class ProductRoutes {
   private initializeRoutes(): void {
     this.router.post('', this.productController.createProduct.bind(this.productController));
     this.router.get('', this.productController.getProducts.bind(this.productController));
-    this.router.get('/:id', this.productController.getProductById.bind(this.productController));
-    this.router.put('/:id', this.productController.updateProduct.bind(this.productController));
-    this.router.delete('/:id', this.productController.deleteProduct.bind(this.productController));
+    this.router.get(
+      '/:id',
+      authorize(Roles.Supplier),
+      this.productController.getProductById.bind(this.productController),
+    );
+    this.router.put('/:id', authorize(Roles.All), this.productController.updateProduct.bind(this.productController));
+    this.router.delete(
+      '/:id',
+      authorize(Roles.Supplier),
+      this.productController.deleteProduct.bind(this.productController),
+    );
   }
 
   public getRouter(): Router {
