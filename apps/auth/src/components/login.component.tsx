@@ -47,7 +47,7 @@ const Login = () => {
       const response = await login({ email, password }).unwrap();
       const { data } = response;
       setCredentials({ ...data, email });
-      navigate('/dashboard');
+      navigate('/b2b-app');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (!err?.originalStatus) {
@@ -62,6 +62,10 @@ const Login = () => {
       }
       errRef.current?.focus();
     }
+  };
+
+  const goToSignUp = () => {
+    navigate('/signup');
   };
 
   return (
@@ -120,7 +124,10 @@ const Login = () => {
             </Stack>
           </form>
           <Text m={3} textAlign="center" color={'blue.500'}>
-            Don't have an account? <Text as="b">Sign up</Text>
+            Don't have an account?{' '}
+            <Text _hover={{ cursor: 'pointer' }} onClick={goToSignUp} as="b">
+              Sign up
+            </Text>
           </Text>
         </Stack>
       </Flex>
