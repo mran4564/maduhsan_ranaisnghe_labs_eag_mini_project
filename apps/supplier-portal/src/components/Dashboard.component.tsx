@@ -11,7 +11,7 @@ const SupplyDashboard = () => {
       }}
       templateColumns={{
         base: '1fr',
-        lg: '250px 2fr',
+        lg: '250px 750px',
       }}
     >
       <Show above="lg">

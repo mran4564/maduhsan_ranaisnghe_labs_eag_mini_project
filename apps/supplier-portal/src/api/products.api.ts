@@ -1,4 +1,5 @@
 import { Column } from 'react-table';
+import axios from 'axios';
 
 export interface ProductResponse {
   productId: string;
@@ -12,6 +13,27 @@ export interface ProductResponse {
   inStock: boolean;
   price: number;
   isApproved?: string;
+}
+export interface ProductCreateDTO {
+  name: string;
+  description: string;
+  supplierId: string;
+  categoryId: string;
+  stockCount: number;
+  imageUrl: string;
+  brandName?: string;
+  instock?: boolean;
+  price: number;
+  isApproved?: boolean;
+}
+
+export interface ProductUpdateDTO {
+  name?: string;
+  description?: string;
+  stockCount?: string;
+  imageUrl: string;
+  price?: number;
+  inStock: true;
 }
 
 export const ProductApproveStatusEnum = {
@@ -83,4 +105,13 @@ export const getData = async (pageNo = 0) => {
 
   const data: ProductPage = await response.json();
   return data;
+};
+
+export const createProduct = async (product: ProductCreateDTO) => {
+  console.log(product);
+  const result = await axios.post(
+    `http://localhost:8626/api/products`,
+    product
+  );
+  return result;
 };
