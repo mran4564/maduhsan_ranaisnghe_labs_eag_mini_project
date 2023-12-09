@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.b2b_system.product.model.ApproveStatus;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -24,4 +25,5 @@ public class ProductResponse {
     private boolean isInStock;
     private String brandName;
     private BigDecimal price;
+    private ApproveStatus isApproved;
 }

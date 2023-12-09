@@ -2,6 +2,7 @@ package org.b2b_system.product.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.b2b_system.product.dto.product.ApproveProductRequest;
 import org.b2b_system.product.dto.product.ProductRequest;
 import org.b2b_system.product.dto.product.ProductResponse;
 import org.b2b_system.product.dto.product.UpdateProductRequest;
@@ -60,6 +61,14 @@ public class ProductController {
     ) {
         return new ResponseEntity<>(productService.updateProductDetails(id, request), HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProductResponse> approveProduct(
+            @PathVariable("id") UUID id, @RequestBody ApproveProductRequest approveProductRequest
+            ) {
+        return new ResponseEntity<>(productService.approveProduct(id, approveProductRequest), HttpStatus.OK);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") UUID id) {
