@@ -90,7 +90,7 @@ function DataTable<T extends object>({
       <Table
         size="sm"
         border="1px"
-        borderColor="gray.100"
+        borderColor="teal.100"
         borderRadius={15}
         {...getTableProps()}
       >
@@ -100,7 +100,7 @@ function DataTable<T extends object>({
               <Tr {...headerGroups.getHeaderGroupProps()}>
                 {headerGroups.headers.map((column) => {
                   return (
-                    <Th {...column.getHeaderProps()}>
+                    <Th bgColor={'gray.200'} {...column.getHeaderProps()}>
                       <Box mb="2">
                         <HStack display="flex" alignItems="center" spacing="2">
                           <Box>{column.render('Header')}</Box>
@@ -129,8 +129,11 @@ function DataTable<T extends object>({
                   <Td
                     {...cell.getCellProps()}
                     minW={'auto'}
-                    pt={4}
+                    pt={3}
                     px={4}
+                    fontWeight="semibold"
+                    color={'gray.600'}
+                    fontSize={12}
                     className={cell.column.id}
                   >
                     {cell.render('Cell')}

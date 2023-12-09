@@ -61,7 +61,7 @@ const Pagination = ({
             key={index}
             size={'sm'}
             mx={2}
-            colorScheme={currentPage === index ? 'blue' : 'gray'}
+            colorScheme={currentPage === index ? 'teal' : 'gray'}
             onClick={() => onPageSelect(index)}
           >
             {index + 1}

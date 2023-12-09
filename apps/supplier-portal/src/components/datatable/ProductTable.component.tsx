@@ -44,7 +44,7 @@ const ProductTable = () => {
   }, []);
 
   return (
-    <Box width={'140%'} height={500} mt={8} ml={10}>
+    <Box width={'100%'} height={500} mt={8} ml={10}>
       <DataTable
         columns={columns}
         data={productData}

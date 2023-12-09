@@ -17,33 +17,8 @@ const items: CategoryItem[] = [
     path: '/b2b-app/products',
   },
   {
-    label: 'Mail',
-    path: '/',
-  },
-  {
-    label: 'Contacts',
-    path: '/',
-  },
-
-  {
-    label: 'Notifications',
-    path: '/',
-  },
-  {
-    label: 'Settings',
-    path: '/',
-  },
-  {
-    label: 'Dashboard',
-    path: '/',
-  },
-  {
-    label: 'Dashboard',
-    path: '/',
-  },
-  {
-    label: 'Products',
-    path: '/',
+    label: 'New Product',
+    path: '/b2b-app/new-product',
   },
   {
     label: 'Mail',
@@ -53,17 +28,12 @@ const items: CategoryItem[] = [
     label: 'Contacts',
     path: '/',
   },
-
   {
     label: 'Notifications',
     path: '/',
   },
   {
     label: 'Settings',
-    path: '/',
-  },
-  {
-    label: 'Dashboard',
     path: '/',
   },
 ];
