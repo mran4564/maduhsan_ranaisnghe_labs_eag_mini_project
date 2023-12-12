@@ -32,6 +32,7 @@ public class Product {
     private UUID supplierId;
     private String brandName;
     private BigDecimal price;
+    private ApproveStatus status;
 
     public void updateStock(boolean increase, int quantity){
         if(increase){
