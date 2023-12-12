@@ -1,7 +1,7 @@
 export const UserRoleEnum = {
-  ADMIN: 'Admin',
-  CUSTOMER: 'Customer',
-  SUPPLIER: 'Supplier',
+  DATA_STEWARD: 'DATA_STEWARD',
+  CUSTOMER: 'CUSTOMER',
+  SUPPLIER: 'SUPPLIER',
 };
 
 export interface UserCreateDTO {

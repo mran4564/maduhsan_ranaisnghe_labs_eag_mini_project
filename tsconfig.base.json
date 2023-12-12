@@ -15,8 +15,13 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@b2b-app-mfe/common-components": ["libs/common-components/src/index.ts"],
       "auth/Module": ["apps/auth/src/remote-entry.ts"],
+      "data-steward-portal/Module": [
+        "apps/data-steward-portal/src/remote-entry.ts"
+      ],
       "global-store/Module": ["apps/global-store/src/remote-entry.ts"],
+      "shop/Module": ["apps/shop/src/remote-entry.ts"],
       "supplier-portal/Module": ["apps/supplier-portal/src/remote-entry.ts"]
     }
   },

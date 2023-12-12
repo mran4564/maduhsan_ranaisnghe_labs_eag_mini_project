@@ -18,6 +18,7 @@ import {
   InputRightElement,
   CircularProgress,
   Box,
+  HStack,
 } from '@chakra-ui/react';
 import { BASE_AUTH_API } from '../utils/constants';
 import { UserRoleEnum } from '../types/user.type';
@@ -90,7 +91,7 @@ const SignUp = () => {
           <Heading fontSize={'2xl'}>Register to your account</Heading>
           <form onSubmit={handleSubmit}>
             <FormControl id="name" isRequired>
-              <FormLabel>Name</FormLabel>
+              <FormLabel> {isChecked ? 'Brand Name' : 'Full Name'} </FormLabel>
               <Input
                 type="name"
                 onChange={(event) => setName(event.currentTarget.value)}
@@ -135,9 +136,13 @@ const SignUp = () => {
                 justify={'space-between'}
               >
                 <Box></Box>
-                <Checkbox isChecked={isChecked} onChange={handleCheckboxChange}>
-                  Supplier
-                </Checkbox>
+                <HStack>
+                  <Text>Supplier</Text>
+                  <Checkbox
+                    isChecked={isChecked}
+                    onChange={handleCheckboxChange}
+                  ></Checkbox>
+                </HStack>
               </Stack>
               <Button colorScheme={'blue'} variant={'solid'} type="submit">
                 {isLoading ? (
