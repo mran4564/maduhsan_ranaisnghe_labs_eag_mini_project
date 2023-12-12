@@ -127,7 +127,7 @@ public class ProductService {
     public ProductResponse approveProduct(UUID id, ApproveProductRequest approveProductRequest) {
         return productRepository.findByProductId(id).map(
                 product -> {
-                    product.setStatus(ApproveStatus.APPROVED);
+                    product.setStatus(approveProductRequest.getApproved());
                     productRepository.save(product);
                     return mapProductToResponse(product);
                 }
