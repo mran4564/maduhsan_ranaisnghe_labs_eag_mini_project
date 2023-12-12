@@ -46,6 +46,7 @@ export type Product = {
   name: string;
   brandName: string;
   stockCount: string;
+  imageUrl?: string;
   instock: string;
   productId?: string;
   isApproved?: string;
@@ -92,6 +93,7 @@ export const formatRowData = (rawData: ProductResponse[]) =>
     name: info.name,
     productId: info.productId,
     stockCount: info.stockCount,
+    imageUrl: info.imageUrl,
     instock: info.inStock ? 'Avaiable' : 'not available',
     brandName: info.brandName,
     isApproved: info.isApproved,

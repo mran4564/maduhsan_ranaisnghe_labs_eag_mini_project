@@ -23,7 +23,7 @@ const ProductCreatePage = () => {
     price: 0,
     stockCount: 0,
     imageUrl:
-      'https://t3.ftcdn.net/jpg/02/06/45/54/360_F_206455496_BStGIyW9AcinRXNqgwn3hPYahiwm7iL9.jpg', // Updated key to imageUrl
+      'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg', // Updated key to imageUrl
     category: '',
   });
   const [categories, setCategories] = useState<CategoryData[]>([]);
@@ -110,11 +110,11 @@ const ProductCreatePage = () => {
   };
 
   return (
-    <Box ml={4} p={4}>
+    <Box width={'90%'} ml={4} p={4}>
       <form onSubmit={handleSubmit}>
         <VStack spacing={4} align="start">
           <HStack>
-            <Box width={'70%'}>
+            <Box width={'80%'}>
               <FormControl>
                 <FormLabel>Name</FormLabel>
                 <Input
@@ -142,9 +142,11 @@ const ProductCreatePage = () => {
                   <input {...getInputProps()} accept="image/*" />
                   {formData.imageUrl ? (
                     <Image
+                      borderRadius={4}
+                      boxShadow={'sm'}
                       src={formData.imageUrl}
                       alt="Product"
-                      maxH="200px" // Adjust the max height as needed
+                      maxH="250px" // Adjust the max height as needed
                     />
                   ) : (
                     <Box
@@ -161,7 +163,7 @@ const ProductCreatePage = () => {
             </Box>
           </HStack>
 
-          <FormControl>
+          <FormControl width={'60%'}>
             <FormLabel>Category</FormLabel>
             <Select
               name="category"
@@ -177,26 +179,29 @@ const ProductCreatePage = () => {
               {/* Add more categories as needed */}
             </Select>
           </FormControl>
-          <FormControl>
-            <FormLabel>Price</FormLabel>
-            <Input
-              type="number"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              required
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Stock</FormLabel>
-            <Input
-              type="number"
-              name="stockCount"
-              value={formData.stockCount}
-              onChange={handleChange}
-              min={0}
-            />
-          </FormControl>
+          <HStack>
+            <FormControl>
+              <FormLabel>Price</FormLabel>
+              <Input
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                required
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Stock</FormLabel>
+              <Input
+                type="number"
+                name="stockCount"
+                value={formData.stockCount}
+                onChange={handleChange}
+                min={0}
+              />
+            </FormControl>
+          </HStack>
+
           <HStack spacing={4}>
             <Button type="submit" colorScheme="teal" isLoading={isLoading}>
               {isLoading ? 'Saving...' : 'Save'}

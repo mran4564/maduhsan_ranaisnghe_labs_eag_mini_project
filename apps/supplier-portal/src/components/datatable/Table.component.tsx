@@ -1,8 +1,6 @@
 import { Box, Thead, Tr, Th, HStack, Tbody, Td, Table } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
 import { Column, useTable } from 'react-table';
-import Loader from '../componentLoader.component';
-import React from 'react';
 import ProductPreviewDrawer from '../products/ProductDrawer.component';
 import { Product } from '../../api/products.api';
 
@@ -70,8 +68,8 @@ function DataTable<T extends object>({
     setDrawerOpen(false);
   };
 
-  return !isLoading ? (
-    <div style={{ height: '450px', overflowY: 'auto', overflowX: 'hidden' }}>
+  return (
+    <div style={{ height: '410px', overflowY: 'auto', overflowX: 'hidden' }}>
       <style>
         {`
           ::-webkit-scrollbar {
@@ -100,10 +98,12 @@ function DataTable<T extends object>({
               <Tr {...headerGroups.getHeaderGroupProps()}>
                 {headerGroups.headers.map((column) => {
                   return (
-                    <Th bgColor={'gray.200'} {...column.getHeaderProps()}>
-                      <Box mb="2">
+                    <Th bgColor={'gray.100'} {...column.getHeaderProps()}>
+                      <Box my="2">
                         <HStack display="flex" alignItems="center" spacing="2">
-                          <Box>{column.render('Header')}</Box>
+                          <Box fontWeight={'bold'} color={'teal'}>
+                            {column.render('Header')}
+                          </Box>
                         </HStack>
                       </Box>
                     </Th>
@@ -118,7 +118,7 @@ function DataTable<T extends object>({
             prepareRow(row);
             return (
               <Tr
-                height={5}
+                height={4}
                 {...row.getRowProps()}
                 onClick={() => handleRowClick(row.original as Product)}
                 bg={''}
@@ -130,7 +130,6 @@ function DataTable<T extends object>({
                     {...cell.getCellProps()}
                     minW={'auto'}
                     pt={3}
-                    px={4}
                     fontWeight="semibold"
                     color={'gray.600'}
                     fontSize={12}
@@ -150,10 +149,6 @@ function DataTable<T extends object>({
         productData={selectedProduct}
       />
     </div>
-  ) : (
-    <Box m={50}>
-      <Loader />
-    </Box>
   );
 }
 

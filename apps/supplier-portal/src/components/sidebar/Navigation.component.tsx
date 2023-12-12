@@ -10,7 +10,7 @@ export interface CategoryItem {
 const items: CategoryItem[] = [
   {
     label: 'Dashboard',
-    path: '/b2b-app',
+    path: '/b2b-app/',
   },
   {
     label: 'Products',
@@ -22,7 +22,7 @@ const items: CategoryItem[] = [
   },
   {
     label: 'Mail',
-    path: '/',
+    path: '/b2b-app/mail',
   },
   {
     label: 'Contacts',

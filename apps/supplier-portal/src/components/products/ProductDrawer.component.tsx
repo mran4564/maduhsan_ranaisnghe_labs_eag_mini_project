@@ -10,6 +10,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerBody,
+  Image,
   Input,
   Button,
   IconButton,
@@ -56,11 +57,25 @@ const ProductPreviewDrawer = ({
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader>
-          <Box>{productData.name}</Box>
-          <Box fontSize={12}>{productData.productId}</Box>
+          <Box pl={3}>{productData.name}</Box>
+          <Box pl={3} fontSize={12}>
+            {productData.productId}
+          </Box>
         </DrawerHeader>
         <DrawerBody>
-          <Table variant="simple">
+          <Image
+            ml={5}
+            src={
+              productData.imageUrl === ''
+                ? 'https://img.freepik.com/free-photo/macaroni-noodles-with-meat-tomato-sauce-served-plate-table_1220-6904.jpg'
+                : productData.imageUrl
+            }
+            borderRadius={8}
+            alt="Product"
+            width={'70%'}
+            maxH="200px" // Adjust the max height as needed
+          />
+          <Table fontSize={14} variant="simple">
             <Tbody>
               <Tr>
                 <Td>Product Name:</Td>
