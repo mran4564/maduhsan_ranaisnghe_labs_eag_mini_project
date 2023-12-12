@@ -1,0 +1,33 @@
+{
+  "name": "data-steward-portal-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/data-steward-portal-e2e/src",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/data-steward-portal-e2e/cypress.config.ts",
+        "testingType": "e2e",
+        "devServerTarget": "data-steward-portal:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "data-steward-portal:serve:production"
+        },
+        "ci": {
+          "devServerTarget": "data-steward-portal:serve-static"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/data-steward-portal-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "implicitDependencies": ["data-steward-portal"],
+  "tags": []
+}
