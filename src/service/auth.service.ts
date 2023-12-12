@@ -31,10 +31,10 @@ class CognitoService {
       new CognitoUserAttribute({ Name: `custom:role`, Value: userRequest.role }),
       new CognitoUserAttribute({ Name: `custom:userId`, Value: userId }),
     ];
-    const result = await new Promise<CognitoUser>((resolve, reject) => {
+    await new Promise<CognitoUser>((resolve, reject) => {
       this.userPool.signUp(userRequest.email, userRequest.password, attributeList, [], (err, result) => {
         if (err) {
-          console.log(err);
+          console.log('auth ' + err);
           reject(err);
         } else {
           if (result?.user) {

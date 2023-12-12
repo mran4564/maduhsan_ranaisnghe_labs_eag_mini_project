@@ -11,7 +11,7 @@ export interface UserSigninDto {
 }
 
 export const UserRoleEnum = {
-  ADMIN: 'Admin',
+  ADMIN: 'Data_Steward',
   CUSTOMER: 'Customer',
   SUPPLIER: 'Supplier',
 };
