@@ -75,7 +75,7 @@ public class ProductController {
         return new ResponseEntity<>(productService.deleteProduct(id), HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}/updateStock")
+    @PatchMapping("/{id}/stock")
     public ResponseEntity<ProductResponse> updateProductStock(@PathVariable("id") UUID id,
                                                      @RequestParam(name="quantity", defaultValue = "1")  int quantity,
                                                      @RequestParam(name="increase", defaultValue = "false") boolean increase) {
