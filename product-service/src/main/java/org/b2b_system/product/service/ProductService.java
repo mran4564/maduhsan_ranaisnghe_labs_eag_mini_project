@@ -19,9 +19,9 @@ public interface ProductService {
 
     ProductResponse updateProductDetails(UUID id, UpdateProductRequest request);
 
-    public String deleteProduct(UUID id);
+    String deleteProduct(UUID id);
 
-    public ProductResponse approveProduct(UUID id, ApproveProductRequest approveProductRequest);
+    ProductResponse approveProduct(UUID id, ApproveProductRequest approveProductRequest);
 
-    public ProductResponse updateProductStock(UUID id, int quantity, boolean increase);
+    ProductResponse updateProductStock(UUID id, int quantity, boolean increase);
 }
