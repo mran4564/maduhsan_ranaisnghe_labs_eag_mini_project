@@ -166,7 +166,7 @@ public class ProductServiceImpl implements ProductService {
                 .imageUrl(product.getImageUrl())
                 .brandName(product.getBrandName())
                 .price(product.getPrice())
-                .isApproved(ApproveStatus.PENDING)
+                .isApproved(product.getStatus())
                 .build();
 
     }
@@ -183,6 +183,7 @@ public class ProductServiceImpl implements ProductService {
                 .imageUrl(request.getImageUrl())
                 .brandName(request.getBrandName())
                 .price(request.getPrice())
+                .status(ApproveStatus.PENDING)
                 .build();
     }
 }
