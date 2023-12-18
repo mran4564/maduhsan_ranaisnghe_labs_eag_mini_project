@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { updateCartItemRequestDto } from '../model/cart.model';
-import { AddCartItemRequestDto } from '../model/order.model';
+import { AddCartItemRequestDto, updateCartItemRequestDto } from '../model/cart.model';
+
 import CartService from '../service/cart.service';
 
 const cartService = new CartService();
