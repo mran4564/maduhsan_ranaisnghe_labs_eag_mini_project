@@ -35,8 +35,8 @@ public class CartController {
     }
 
     @DeleteMapping
-    public ResponseEntity<CartResponse> resetCart(@RequestParam("cartId") UUID cartId) {
-        return ResponseEntity.ok(cartService.restCart(cartId));
+    public ResponseEntity<CartResponse> resetCart(@RequestParam("customer_id") UUID customerId) {
+        return ResponseEntity.ok(cartService.restCart(customerId));
     }
 
     @PutMapping
@@ -47,7 +47,7 @@ public class CartController {
 
     @PatchMapping("/{cartItemId}")
     public ResponseEntity<CartResponse> updateCartItem(@PathVariable("cartItemId") UUID cartItemId,
-                                                        UpdateCartItemRequest request) {
+                                                       @RequestBody @Valid UpdateCartItemRequest request) {
         return ResponseEntity.ok(cartService.updateCartItem(cartItemId,request));
     }
 
