@@ -40,3 +40,7 @@ export interface PageResponse {
   pageSize: number;
   totalElements: number;
 }
+
+export interface ProductApproveRequest {
+  approved: string;
+}

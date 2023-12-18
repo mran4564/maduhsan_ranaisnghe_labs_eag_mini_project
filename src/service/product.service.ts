@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Request } from 'express';
-import { PageResponse, ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
+import { PageResponse, ProductApproveRequest, ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
 import config from '../config/config';
 
 class ProductService {
@@ -28,12 +28,19 @@ class ProductService {
     };
     return responseData;
   }
+
   async getProductById(productId: string) {
     const response = await axios.get(config.productApi + `/${productId}`);
     return response.data;
   }
+
   async updateProduct(productId: string, productDTO: ProductUpdateDTO) {
     const result = await axios.put(config.productApi + `/${productId}`, productDTO);
+    return result.data;
+  }
+
+  async approveProduct(productId: string, approveRequest: ProductApproveRequest) {
+    const result = await axios.patch(config.productApi + `/${productId}`, approveRequest);
     return result.data;
   }
 

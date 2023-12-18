@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import ProductService from '../service/product.service';
-import { ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
-import { UserRoleEnum } from '../model/auth.model';
+import { ProductApproveRequest, ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
 
 const productService = new ProductService();
 
@@ -58,6 +57,21 @@ class ProductController {
       const deleted = await productService.deleteProduct(productId);
       if (deleted) {
         res.status(200).json({ message: 'Product deleted successfully' });
+      } else {
+        res.status(404).json({ message: 'Product not found' });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async approveProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const productId: string = req.params.id;
+    const approveRequest: ProductApproveRequest = req.body;
+    try {
+      const product = await productService.approveProduct(productId, approveRequest);
+      if (product) {
+        res.status(200).json({ message: `Product status updated to ${approveRequest.approved}` });
       } else {
         res.status(404).json({ message: 'Product not found' });
       }
