@@ -13,6 +13,7 @@
         <module>user-service</module>
         <module>order-service</module>
         <module>batch-service</module>
+        <module>cart-service</module>
     </modules>
 
     <properties>
