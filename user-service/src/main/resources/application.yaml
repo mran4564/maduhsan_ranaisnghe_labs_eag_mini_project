@@ -2,7 +2,7 @@ server:
   port: 8081
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/b2bapp
+    url: jdbc:mysql://localhost:3306/user-service
     username: root
     password: admin
     driver-class-name: com.mysql.cj.jdbc.Driver

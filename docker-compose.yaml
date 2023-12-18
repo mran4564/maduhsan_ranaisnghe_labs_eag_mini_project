@@ -1,13 +1,14 @@
 services:
-  mysql:
-    container_name: mysql-b2b
+  mysql-db1:
     image: mysql:latest
+    container_name: mysql-user-service
     environment:
       MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: b2bapp
+      MYSQL_DATABASE: user-service
     ports:
       - "3306:3306"
-    restart: unless-stopped
+    volumes:
+      - mysql-data-1:/var/lib/mysql
 
   mysql-db2:
     image: mysql:latest
@@ -31,7 +32,19 @@ services:
     volumes:
       - mysql-data-3:/var/lib/mysql
 
+  mysql-db4:
+    image: mysql:latest
+    container_name: mysql-product-service
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: product-service
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql-data-4:/var/lib/mysql
+
 volumes:
   mysql-data-1:
   mysql-data-2:
   mysql-data-3:
+  mysql-data-4:
