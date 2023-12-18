@@ -20,8 +20,6 @@ async function validateToken(token: string): Promise<any> {
     throw new Error('Invalid token');
   }
 
-  const userRole = decodedToken.payload['custom:role'];
-
   const jwksUri = `https://cognito-idp.${REGION}.amazonaws.com/${USER_POOL_ID}/.well-known/jwks.json`;
 
   const client = jwksClient({
@@ -62,36 +60,52 @@ async function validateToken(token: string): Promise<any> {
   });
 }
 
-const validateTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization?.split(' ')[1];
+export const authorize = function (roles: string[] = []) {
+  if (!Array.isArray(roles)) roles = [roles];
 
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized: No token provided' });
-  }
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    }
 
-  try {
-    const resultValidation = await validateToken(token);
+    try {
+      const resultValidation = await validateToken(token);
 
-    //resultValidation returns current user data (as a token we should use IdToken to get all of the details about the user)
-    req.user = {
-      id: resultValidation.sub,
-      name: resultValidation.name,
-      email: resultValidation.email,
-      roles: resultValidation['cognito:groups'],
-    };
-  } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
-  }
+      //resultValidation returns current user data (as a token we should use IdToken to get all of the details about the user)
+      req.user = {
+        id: resultValidation.sub,
+        name: resultValidation.name,
+        email: resultValidation.email,
+        roles: resultValidation['cognito:groups'],
+      };
 
-  next();
+      const userRole: any = resultValidation['custom:role'];
+      console.log(resultValidation);
+
+      if (roles.indexOf(userRole) === -1) return res.status(401).json({ message: 'Not Autherized for this Action' });
+      next();
+    } catch (err) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+  };
 };
 
 //Typescript way to define user field under the express Request.
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user: { name: string; email: string; id: string; roles: Array<string> };
     }
   }
 }
-export { validateTokenMiddleware };
+
+export const Roles = {
+  Supplier: ['SUPPLIER'],
+  Customer: ['CUSTOMER'],
+  Admin: ['ADMIN'],
+  All: ['SUPPLIER', 'CUSTOMER', 'ADMIN'],
+};
+
+// export { validateTokenMiddleware };

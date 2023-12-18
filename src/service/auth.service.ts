@@ -3,37 +3,87 @@ import {
   CognitoUser,
   CognitoUserAttribute,
   CognitoUserPool,
-  CognitoUserSession,
   CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
 import config from '../config/config';
+import { UserCreateDTO } from '../model/auth.model';
+import axios from 'axios';
+import { isValidStatus } from '../helpers/validator';
+import { v4 as uuidv4 } from 'uuid';
+import CartService from './cart.service';
+import { CognitoIdentityProvider } from '@aws-sdk/client-cognito-identity-provider';
 
 class CognitoService {
   private userPool: CognitoUserPool;
+  private cartService: CartService;
 
   constructor() {
     this.userPool = new CognitoUserPool({
       UserPoolId: config.cognitoUserPoolId,
       ClientId: config.cognitoClientId,
     });
+    this.cartService = new CartService();
   }
 
-  async signUp(email: string, password: string) {
-    const attributeList = [new CognitoUserAttribute({ Name: 'custom:role', Value: 'customer' })];
-    const result = await new Promise<CognitoUser | undefined>((resolve, reject) => {
-      this.userPool.signUp(email, password, attributeList, [], (err, result) => {
-        if (err) {
-          console.log(err);
-          reject(err);
-        } else {
-          resolve(result?.user);
-        }
+  async signUp(userRequest: UserCreateDTO) {
+    let cognitoUser;
+    try {
+      if (!isValidStatus(userRequest.role)) {
+        throw new Error(`Not a valid user type ${userRequest.role} }`);
+      }
+      userRequest.role = userRequest.role.toUpperCase();
+      const userId = uuidv4();
+      const attributeList = [
+        new CognitoUserAttribute({ Name: `custom:role`, Value: userRequest.role }),
+        new CognitoUserAttribute({ Name: `custom:userId`, Value: userId }),
+      ];
+      cognitoUser = await new Promise<CognitoUser>((resolve, reject) => {
+        this.userPool.signUp(userRequest.email, userRequest.password, attributeList, [], (err, result) => {
+          if (err) {
+            console.log('auth-service ' + err);
+            reject(err);
+          } else {
+            if (result?.user) {
+              resolve(result?.user);
+            }
+            reject(result);
+          }
+        });
       });
-    });
-    return result;
+
+      const { name, email, role } = userRequest;
+      const savedUser = await axios.post(config.authApi, { userId, name, email, role });
+      await this.cartService.createCart({ customerId: userId });
+      return savedUser.data;
+    } catch (error) {
+      console.error('Database saving failed. Rolling back Cognito signup.', error);
+
+      // Rollback by deleting the Cognito user
+      if (cognitoUser) {
+        await this.deleteCognitoUser(cognitoUser);
+      }
+
+      throw error;
+    }
   }
 
-  async signIn(email: string, password: string): Promise<CognitoUserSession> {
+  async deleteCognitoUser(cognitoUser: CognitoUser) {
+    const cognitoIdentityServiceProvider = new CognitoIdentityProvider();
+
+    const params = {
+      UserPoolId: config.cognitoUserPoolId,
+      Username: cognitoUser.getUsername(),
+    };
+
+    try {
+      await cognitoIdentityServiceProvider.adminDeleteUser(params);
+      console.log(`Cognito user ${cognitoUser.getUsername()} deleted successfully.`);
+    } catch (deleteError) {
+      console.error('Error deleting Cognito user:', deleteError);
+    }
+  }
+
+  async signIn(email: string, password: string): Promise<any> {
     const authenticationDetails = new AuthenticationDetails({
       Username: email,
       Password: password,
@@ -45,11 +95,20 @@ class CognitoService {
     };
 
     const cognitoUser = new CognitoUser(userData);
-
     return new Promise((resolve, reject) => {
       cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: (session) => resolve(session),
-        onFailure: (err) => reject(err),
+        onSuccess: (session) => {
+          const idToken = session.getIdToken().getJwtToken();
+          const idTokenPayload = session.getIdToken().payload;
+          const refreshToken = session.getRefreshToken().getToken();
+          const userRole = idTokenPayload['custom:role'];
+          const userId = idTokenPayload['custom:userId'];
+          resolve({ userId, userRole, idToken, refreshToken });
+        },
+        onFailure: (err) => {
+          console.log('auth-service ' + err);
+          reject(err);
+        },
       });
     });
   }
@@ -68,7 +127,7 @@ class CognitoService {
       if (err) {
         console.log(err);
       } else {
-        let retObj = {
+        const retObj = {
           access_token: session.accessToken.jwtToken,
           id_token: session.idToken.jwtToken,
           refresh_token: session.refreshToken.token,

@@ -1,49 +1,53 @@
-import axios, { AxiosResponse } from 'axios';
-import { ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
+import axios from 'axios';
+import { Request } from 'express';
+import { PageResponse, ProductApproveRequest, ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
 import config from '../config/config';
 
 class ProductService {
-  async createProduct(productDTO: ProductCreateDTO): Promise<AxiosResponse<any, any>> {
-    const response = await axios.get(config.productApi, { params: productDTO });
-    return response;
+  async createProduct(productDTO: ProductCreateDTO) {
+    const result = await axios.post(config.productApi, productDTO);
+    return result;
+  }
+  async getProducts(req: Request) {
+    const { page, size, category_id, brand_name, in_stock } = req.query;
+    const response = await axios.get(config.productApi, {
+      params: {
+        page,
+        size,
+        category_id,
+        brand_name,
+        in_stock,
+      },
+    });
+    const responseData: PageResponse = {
+      content: response.data.content,
+      pageSize: response.data.size,
+      currentPage: response.data.pageable.pageNumber,
+      totalElements: response.data.totalElements,
+      totalPages: response.data.totalPages,
+    };
+    return responseData;
   }
 
-  // async getProducts(): Promise<Product[]> {
-  //   // Implement your logic to retrieve products from the database
-  //   // Return an array of products
-  //   const products: Product[] = [
-  //     { id: '1', name: 'Product 1', description: 'Description 1', price: 19.99 },
-  //     { id: '2', name: 'Product 2', description: 'Description 2', price: 29.99 },
-  //     // Add more products as needed
-  //   ];
-  //   return products;
-  // }
+  async getProductById(productId: string) {
+    const response = await axios.get(config.productApi + `/${productId}`);
+    return response.data;
+  }
 
-  // async getProductById(productId: string): Promise<Product | null> {
-  //   // Implement your logic to retrieve a product by ID from the database
-  //   // Return the product or null if not found
-  //   const product: Product | null = {
-  //     id: '1',
-  //     name: 'Product 1',
-  //     description: 'Description 1',
-  //     price: 19.99,
-  //   };
-  //   return product;
-  // }
+  async updateProduct(productId: string, productDTO: ProductUpdateDTO) {
+    const result = await axios.put(config.productApi + `/${productId}`, productDTO);
+    return result.data;
+  }
 
-  // async updateProduct(productId: string, productDTO: ProductUpdateDTO): Promise<boolean> {
-  //   // Implement your logic to update a product in the database
-  //   // Return true if the update is successful, false otherwise
-  //   const updated = true;
-  //   return updated;
-  // }
+  async approveProduct(productId: string, approveRequest: ProductApproveRequest) {
+    const result = await axios.patch(config.productApi + `/${productId}`, approveRequest);
+    return result.data;
+  }
 
-  // async deleteProduct(productId: string): Promise<boolean> {
-  //   // Implement your logic to delete a product from the database
-  //   // Return true if the deletion is successful, false otherwise
-  //   const deleted = true;
-  //   return deleted;
-  // }
+  async deleteProduct(productId: string) {
+    const result = await axios.delete(config.productApi + `/${productId}`);
+    return result.data;
+  }
 }
 
 export default ProductService;
