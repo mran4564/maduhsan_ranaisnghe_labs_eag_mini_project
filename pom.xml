@@ -93,6 +93,7 @@
                 <plugin>
                     <groupId>com.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.maven.plugin.version}</version>
                     <configuration>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
