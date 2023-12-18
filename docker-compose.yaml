@@ -1,7 +1,7 @@
 services:
   mysql:
     container_name: mysql-b2b
-    image: mysql
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: b2bapp
@@ -9,3 +9,29 @@ services:
       - "3306:3306"
     restart: unless-stopped
 
+  mysql-db2:
+    image: mysql:latest
+    container_name: mysql-order-service
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: order-service
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data-2:/var/lib/mysql
+
+  mysql-db3:
+    image: mysql:latest
+    container_name: mysql-cart-service
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: cart-service
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-data-3:/var/lib/mysql
+
+volumes:
+  mysql-data-1:
+  mysql-data-2:
+  mysql-data-3:
