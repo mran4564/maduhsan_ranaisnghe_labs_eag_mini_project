@@ -1,4 +1,4 @@
-package org.b2b_system.order.dto;
+package org.b2b_system.order.dto.orderitem;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,9 +14,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderItemResponse {
-    private UUID subOrderId;
+    private UUID orderItemId;
     private UUID productId;
-    private UUID orderId;
+    private UUID supplierId;
     private OrderItemStatus status;
     private int quantity;
     private BigDecimal total;

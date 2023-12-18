@@ -22,6 +22,7 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SUBORDER_SEQ")
     private int id;
     private UUID orderItemId;
+    private UUID supplierId;
     private UUID productId;
     private OrderItemStatus status;
     private int quantity;

@@ -1,4 +1,4 @@
-package org.b2b_system.order.dto;
+package org.b2b_system.order.dto.orderitem;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CreateOrderItemRequest {
     private UUID productId;
-    private BigDecimal price;
+    private UUID supplierId;
+    private BigDecimal unitPrice;
     private int quantity;
 }

@@ -1,9 +1,10 @@
-package org.b2b_system.order.dto;
+package org.b2b_system.order.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.b2b_system.order.dto.orderitem.OrderItemResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
