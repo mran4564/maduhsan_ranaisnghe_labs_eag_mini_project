@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { CategoryCreateDto } from '../model/category.model';
-import CategoryService from '../service/categoryService';
+import CategoryService from '../service/category.service';
 
 const categoryService = new CategoryService();
 
