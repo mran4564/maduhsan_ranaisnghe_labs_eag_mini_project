@@ -72,7 +72,7 @@ export const authorize = function (roles: string[] = []) {
     try {
       const resultValidation = await validateToken(token);
 
-      //resultValidation returns current user data (as a token we should use IdToken to get all of the details about the user)
+      //resultValidation returns current user data
       req.user = {
         id: resultValidation.sub,
         name: resultValidation.name,
