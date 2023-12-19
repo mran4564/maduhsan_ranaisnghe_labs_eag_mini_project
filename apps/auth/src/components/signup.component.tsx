@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import {
   Button,
@@ -19,26 +18,24 @@ import {
   CircularProgress,
   Box,
   HStack,
+  useToast,
 } from '@chakra-ui/react';
-import { BASE_AUTH_API } from '../utils/constants';
 import { UserRoleEnum } from '../types/user.type';
+import { AUTH_API, usePost } from '@b2b-app-mfe/services';
 
 const SignUp = () => {
   const userRef = useRef<HTMLInputElement>(null);
-  const errRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
   const [isChecked, setIsChecked] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [errMsg, setErrMsg] = useState('');
   const navigate = useNavigate();
-
+  const toast = useToast();
+  const { postData, isLoading, error } = usePost(AUTH_API + '/signup');
   const handleCheckboxChange = () => {
-    setIsChecked(!isChecked); // Toggle the value
+    setIsChecked(!isChecked);
   };
 
   useEffect(() => {
@@ -46,38 +43,29 @@ const SignUp = () => {
   }, []);
 
   useEffect(() => {
-    setErrMsg('');
-  }, [email, password]);
+    if (error) {
+      console.log(error);
+      toast({
+        position: 'bottom-right',
+        description: error,
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [error]);
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    setIsLoading(true);
-    try {
-      const role = isChecked ? UserRoleEnum.SUPPLIER : UserRoleEnum.CUSTOMER;
-      const response = await axios.post(`${BASE_AUTH_API}/signup`, {
-        email,
-        name,
-        password,
-        role,
-      });
-      if (response.status === 201) {
-        navigate('/verification');
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (!err?.originalStatus) {
-        // isLoading: true until timeout occurs
-        setErrMsg('No Server Response');
-      } else if (err.originalStatus === 400) {
-        setErrMsg('Missing Username or Password');
-      } else if (err.originalStatus === 401) {
-        setErrMsg('Unauthorized');
-      } else {
-        setErrMsg('Login Failed');
-      }
-      errRef.current?.focus();
+    const role = isChecked ? UserRoleEnum.SUPPLIER : UserRoleEnum.CUSTOMER;
+    const response = await postData({
+      email,
+      name,
+      password,
+      role,
+    });
+    if (response) {
+      navigate('/verifiy');
     }
-    setIsLoading(false);
   };
 
   const goToSignIn = () => {
@@ -93,6 +81,7 @@ const SignUp = () => {
             <FormControl id="name" isRequired>
               <FormLabel> {isChecked ? 'Brand Name' : 'Full Name'} </FormLabel>
               <Input
+                placeholder="ex: John Doe"
                 type="name"
                 onChange={(event) => setName(event.currentTarget.value)}
               />
@@ -100,6 +89,7 @@ const SignUp = () => {
             <FormControl id="email" isRequired>
               <FormLabel>Email address</FormLabel>
               <Input
+                placeholder="ex: test@example.com"
                 type="email"
                 onChange={(event) => setEmail(event.currentTarget.value)}
               />

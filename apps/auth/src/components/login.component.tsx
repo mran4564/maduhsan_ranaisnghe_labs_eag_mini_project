@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { AUTH_API, usePost } from '@b2b-app-mfe/services';
 import {
   Button,
   Checkbox,
@@ -16,13 +16,12 @@ import {
   InputGroup,
   InputRightElement,
   CircularProgress,
+  useToast,
 } from '@chakra-ui/react';
-import { useLoginMutation } from 'global-store/Module';
 import { AuthSlice } from 'global-store/Module';
 
 const Login = () => {
   const userRef = useRef<HTMLInputElement>(null);
-  const errRef = useRef<HTMLInputElement>(null);
   const [email, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +30,8 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState('');
   const navigate = useNavigate();
   const { setCredentials } = AuthSlice();
-  const [login, { isLoading }] = useLoginMutation();
+  const { postData, isLoading, error } = usePost(AUTH_API + '/signin');
+  const toast = useToast();
 
   useEffect(() => {
     userRef.current?.focus();
@@ -41,26 +41,32 @@ const Login = () => {
     setErrMsg('');
   }, [email, password]);
 
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast({
+        position: 'bottom-right',
+        description: error,
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [error]);
+
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    try {
-      const response = await login({ email, password }).unwrap();
-      const { data } = response;
-      setCredentials({ ...data, email });
+    const result = await postData({ email, password });
+    if (result) {
+      setCredentials({ ...result.data });
       navigate('/b2b-app');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (!err?.originalStatus) {
-        // isLoading: true until timeout occurs
-        setErrMsg('No Server Response');
-      } else if (err.originalStatus === 400) {
-        setErrMsg('Missing Username or Password');
-      } else if (err.originalStatus === 401) {
-        setErrMsg('Unauthorized');
-      } else {
-        setErrMsg('Login Failed');
-      }
-      errRef.current?.focus();
+    }
+    if (error) {
+      toast({
+        position: 'bottom-right',
+        description: error,
+        status: 'error',
+        isClosable: true,
+      });
     }
   };
 
@@ -77,6 +83,7 @@ const Login = () => {
             <FormControl id="email" isRequired>
               <FormLabel>Email address</FormLabel>
               <Input
+                placeholder="test@example.com"
                 type="email"
                 onChange={(event) => setUser(event.currentTarget.value)}
               />

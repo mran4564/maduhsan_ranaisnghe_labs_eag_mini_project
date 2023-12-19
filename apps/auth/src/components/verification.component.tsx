@@ -2,9 +2,9 @@ import { Box, Text } from '@chakra-ui/react';
 
 const VerificationMessage = () => {
   return (
-    <Box p={4}>
-      <Text fontSize="xl" fontWeight="bold">
-        Email Verification
+    <Box p={4} m={12}>
+      <Text fontSize="20" fontWeight="bold">
+        Verification Email Sent
       </Text>
       <Text mt={4}>
         The verification link has been sent to your email. Please check your
