@@ -2,6 +2,7 @@ package org.b2b_system.product.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.b2b_system.product.common.Constants;
 import org.b2b_system.product.dto.product.ApproveProductRequest;
 import org.b2b_system.product.dto.product.ProductRequest;
 import org.b2b_system.product.dto.product.ProductResponse;
@@ -20,6 +21,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+/**
+ * Hold logic related to ProductService endpoints
+ *
+ * @author madushan ransinghe
+ */
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -36,10 +42,10 @@ public class ProductServiceImpl implements ProductService {
      */
     public ProductResponse createProduct(ProductRequest request) {
         if (productRepository.existsByName(request.getName())) {
-            throw new EntityAlreadyExistsException("Product %s already exists".formatted(request.getName()));
+            throw new EntityAlreadyExistsException(Constants.PRODUCT_NAME_AVAILABLE_EXCEPTION_MESSAGE.formatted(request.getName()));
         }
         if (!categoryRepository.existsByCategoryId(request.getCategoryId())) {
-            throw new EntityNotFoundException("Category with id %s is not available".formatted(request.getCategoryId()));
+            throw new EntityNotFoundException(Constants.CATEGORY_NOT_FOUND_EXCEPTION_MESSAGE.formatted(request.getCategoryId()));
         }
 
         var product = mapRequestToProduct(request);
@@ -57,9 +63,10 @@ public class ProductServiceImpl implements ProductService {
      * @return list of productResponse objects
      */
     public Page<ProductResponse> getAllProducts(Pageable pageable, UUID categoryId,
-                                                String brandName, Boolean isInStock) {
+                                                String brandName, Boolean isInStock, ApproveStatus status) {
+
         return productRepository
-                .findProductMatch(categoryId, brandName, isInStock, pageable)
+                .findProductMatch(categoryId, brandName, isInStock, status, pageable)
                 .map(this::mapProductToResponse);
     }
 
@@ -110,17 +117,16 @@ public class ProductServiceImpl implements ProductService {
     public String deleteProduct(UUID id) {
         var product = productRepository.findByProductId(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Incorrect product_id or product with id - %s does not exist".formatted(id)));
+                        Constants.PRODUCT_NOT_FOUND_EXCEPTION_MESSAGE.formatted(id)));
         productRepository.delete(product);
-        logger.info("Product deleted successfully");
-
+        logger.info("Product with Id:{} deleted successfully", product.getProductId());
         return "Product deleted successfully";
     }
 
     /**
      * Approve Product By Sysco Data Stewards
      *
-     * @param id product Id
+     * @param id                    product Id
      * @param approveProductRequest Product Update Request
      * @return updated Product
      */
@@ -138,7 +144,7 @@ public class ProductServiceImpl implements ProductService {
     /**
      * increase or decrease the product quantity
      *
-     * @param id product id
+     * @param id       product id
      * @param quantity product quantity
      * @param increase operation need to be done increase or decrease
      * @return updated product
