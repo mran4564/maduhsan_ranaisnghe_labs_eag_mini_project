@@ -34,11 +34,11 @@ public class Product {
     private BigDecimal price;
     private ApproveStatus status;
 
-    public void updateStock(boolean increase, int quantity){
-        if(increase){
+    public void updateStock(boolean increase, int quantity) {
+        if (increase) {
             this.stockCount += quantity;
-        }else{
-            if(this.stockCount < quantity){
+        } else {
+            if (this.stockCount < quantity) {
                 throw new InsufficientStockException("Invalid quantity for update");
             }
             this.stockCount -= quantity;
