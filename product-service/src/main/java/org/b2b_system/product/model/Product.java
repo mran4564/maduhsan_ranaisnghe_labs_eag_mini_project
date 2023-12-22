@@ -29,6 +29,7 @@ public class Product {
     private String imageUrl;
     private boolean isInStock;
     private UUID categoryId;
+    private String categoryName;
     private UUID supplierId;
     private String brandName;
     private BigDecimal price;

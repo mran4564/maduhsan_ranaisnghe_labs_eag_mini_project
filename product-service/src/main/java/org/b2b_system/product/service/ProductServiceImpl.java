@@ -9,6 +9,7 @@ import org.b2b_system.product.dto.product.ProductResponse;
 import org.b2b_system.product.dto.product.UpdateProductRequest;
 import org.b2b_system.product.exception.EntityAlreadyExistsException;
 import org.b2b_system.product.model.ApproveStatus;
+import org.b2b_system.product.model.Category;
 import org.b2b_system.product.model.Product;
 import org.b2b_system.product.repository.CategoryRepository;
 import org.b2b_system.product.repository.ProductRepository;
@@ -44,11 +45,10 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.existsByName(request.getName())) {
             throw new EntityAlreadyExistsException(Constants.PRODUCT_NAME_AVAILABLE_EXCEPTION_MESSAGE.formatted(request.getName()));
         }
-        if (!categoryRepository.existsByCategoryId(request.getCategoryId())) {
-            throw new EntityNotFoundException(Constants.CATEGORY_NOT_FOUND_EXCEPTION_MESSAGE.formatted(request.getCategoryId()));
-        }
+        var category = categoryRepository.findByCategoryId(request.getCategoryId()).orElseThrow(
+                () -> new EntityNotFoundException(Constants.CATEGORY_NOT_FOUND_EXCEPTION_MESSAGE.formatted(request.getCategoryId())));
 
-        var product = mapRequestToProduct(request);
+        var product = mapRequestToProduct(request, category);
         var savedProduct = productRepository.save(product);
         logger.info("Product saved successfully");
 
@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
         product.setImageUrl(request.getImageUrl());
         product.setPrice(request.getPrice());
         var updatedCategory = productRepository.save(product);
-        logger.info("Product Updated successfully");
+        logger.info("Product with Id:{} Updated successfully", product.getProductId());
 
         return mapProductToResponse(updatedCategory);
     }
@@ -177,11 +177,12 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-    private Product mapRequestToProduct(ProductRequest request) {
+    private Product mapRequestToProduct(ProductRequest request, Category category) {
         return Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .categoryId(request.getCategoryId())
+                .categoryName(category.getName())
                 .productId(UUID.randomUUID())
                 .supplierId(request.getSupplierId())
                 .isInStock(request.isInStock())
