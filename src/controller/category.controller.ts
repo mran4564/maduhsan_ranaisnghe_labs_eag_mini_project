@@ -18,7 +18,7 @@ class CategoryController {
   async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const data = await categoryService.getAll();
-      res.status(200).json(data);
+      res.status(200).json({ content: data });
     } catch (error) {
       next(error);
     }

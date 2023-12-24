@@ -13,6 +13,7 @@ export interface CartItemResponseDto {
   cartItemId: string;
   productId: string;
   quantity: number;
+  unitPrice: number;
   total: number;
 }
 

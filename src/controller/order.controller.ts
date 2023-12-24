@@ -9,8 +9,8 @@ class OrderController {
   async createOrder(req: Request, res: Response, next: NextFunction): Promise<void> {
     const orderDTO: CreateOrderRequestDto = req.body;
     try {
-      const result = await orderService.createOrder(orderDTO);
-      res.status(201).json({ message: 'Order Created successfully', result });
+      const data = await orderService.createOrder(orderDTO);
+      res.status(201).json({ message: 'Order Created successfully', data });
     } catch (error: any) {
       next(error);
     }

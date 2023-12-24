@@ -3,10 +3,20 @@ import axios from 'axios';
 import { Request } from 'express';
 import config from '../config/config';
 import { CreateOrderRequestDto, UpdateOrderItemStatusRequestDto } from '../model/order.model';
+import CartService from './cart.service';
 
 class OrderService {
+  cartService = new CartService();
+
   async createOrder(createOrderRequestDto: CreateOrderRequestDto) {
     const response = await axios.post(config.orderApi, createOrderRequestDto);
+    if (response.status === 200) {
+      const response = await axios.delete(config.cartApi, {
+        params: {
+          customer_id: createOrderRequestDto.customerId,
+        },
+      });
+    }
     return response.data;
   }
 

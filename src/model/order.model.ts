@@ -7,8 +7,8 @@ export interface CreateOrderRequestDto {
 export interface CreateOrderItemRequestDto {
   productId: string;
   supplierId: string;
-  unitPrice: string;
-  quantity: string;
+  unitPrice: number;
+  quantity: number;
 }
 
 export interface OrderResponse {

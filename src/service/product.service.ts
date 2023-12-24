@@ -5,11 +5,14 @@ import config from '../config/config';
 
 class ProductService {
   async createProduct(productDTO: ProductCreateDTO) {
+    const supplierData = await axios.get(config.userApi + `/${productDTO.supplierId}`);
+    const { name } = supplierData.data;
+    productDTO.brandName = name;
     const result = await axios.post(config.productApi, productDTO);
     return result;
   }
   async getProducts(req: Request) {
-    const { page, size, category_id, brand_name, in_stock } = req.query;
+    const { page, size, category_id, brand_name, in_stock, status } = req.query;
     const response = await axios.get(config.productApi, {
       params: {
         page,
@@ -17,6 +20,7 @@ class ProductService {
         category_id,
         brand_name,
         in_stock,
+        status,
       },
     });
     const responseData: PageResponse = {
