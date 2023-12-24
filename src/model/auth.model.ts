@@ -15,3 +15,8 @@ export const UserRoleEnum = {
   CUSTOMER: 'CUSTOMER',
   SUPPLIER: 'SUPPLIER',
 };
+
+export const cognitoCustomAttributes = {
+  role: 'custom:role',
+  userId: 'custom:userId',
+};
