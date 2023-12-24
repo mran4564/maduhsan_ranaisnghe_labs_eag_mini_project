@@ -10,7 +10,7 @@ const config = {
   orderApi: process.env.ORDER_BASE_URL || '',
   orderItemApi: process.env.ORDER_ITEM_BASE_URL || '',
   cartApi: process.env.CART_BASE_URL || '',
-  authApi: process.env.USER_BASE_URL || '',
+  userApi: process.env.USER_BASE_URL || '',
   cognitoUserPoolId: process.env.AWS_USER_POOL_ID || '',
   cognitoClientId: process.env.AWS_COGNITO_CLIENT_ID || '',
   cognitoRegion: process.env.AWS_COGNITO_REGION || '',
