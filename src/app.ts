@@ -7,6 +7,7 @@ import ProductRoutes from './route/products.route';
 import CategoryRoutes from './route/category.route';
 import CartRoutes from './route/cart.route';
 import OrderRoutes from './route/order.route';
+import { errorHandler } from './helpers/error.handler';
 
 const app: Application = express();
 const authRoutes = new AuthRoutes();
@@ -14,14 +15,6 @@ const productRoutes = new ProductRoutes();
 const categoryRoutes = new CategoryRoutes();
 const cartRoutes = new CartRoutes();
 const orderRoutes = new OrderRoutes();
-
-const errorHandler: ErrorRequestHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
-  if (error.response.data.message) {
-    res.status(error.response.status).json(error.response.data);
-  } else {
-    res.status(error.response.status).json(error.response.data);
-  }
-};
 
 const corsOptions = {
   origin: [
@@ -36,8 +29,14 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  // Add a one-second delay
+  setTimeout(() => {
+    next(); // Continue to the next middleware or route handler
+  }, 1000); // 1000 milliseconds (1 second) delay
+});
 app.use('/api/v1/auth', authRoutes.getRouter());
-app.use('api/v1/products', productRoutes.getRouter());
+app.use('/api/v1/products', productRoutes.getRouter());
 app.use('/api/v1/category', categoryRoutes.getRouter());
 app.use('/api/v1/carts', cartRoutes.getRouter());
 app.use('/api/v1/orders', orderRoutes.getRouter());
