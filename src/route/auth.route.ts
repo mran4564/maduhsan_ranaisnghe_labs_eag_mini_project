@@ -14,6 +14,7 @@ class AuthRoutes {
   private initializeRoutes(): void {
     this.router.post('/signup', this.authController.signUp.bind(this.authController));
     this.router.post('/signin', this.authController.signIn.bind(this.authController));
+    this.router.post('/refresh-token', this.authController.refreshToken.bind(this.authController));
   }
 
   public getRouter(): Router {

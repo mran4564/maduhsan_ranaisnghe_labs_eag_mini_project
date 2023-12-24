@@ -6,7 +6,7 @@ import {
   CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
 import config from '../config/config';
-import { UserCreateDTO } from '../model/auth.model';
+import { cognitoCustomAttributes, UserCreateDTO } from '../model/auth.model';
 import axios from 'axios';
 import { isValidStatus } from '../helpers/validator';
 import { v4 as uuidv4 } from 'uuid';
@@ -40,7 +40,7 @@ class CognitoService {
       cognitoUser = await new Promise<CognitoUser>((resolve, reject) => {
         this.userPool.signUp(userRequest.email, userRequest.password, attributeList, [], (err, result) => {
           if (err) {
-            console.log('auth-service ' + err);
+            console.log('auth-service ' + err.message);
             reject(err);
           } else {
             if (result?.user) {
@@ -52,11 +52,11 @@ class CognitoService {
       });
 
       const { name, email, role } = userRequest;
-      const savedUser = await axios.post(config.authApi, { userId, name, email, role });
+      const savedUser = await axios.post(config.userApi, { userId, name, email, role });
       await this.cartService.createCart({ customerId: userId });
       return savedUser.data;
     } catch (error) {
-      console.error('Database saving failed. Rolling back Cognito signup.', error);
+      console.error('Auth-service: Database saving failed. Rolling back Cognito signup.', error);
 
       // Rollback by deleting the Cognito user
       if (cognitoUser) {
@@ -77,9 +77,9 @@ class CognitoService {
 
     try {
       await cognitoIdentityServiceProvider.adminDeleteUser(params);
-      console.log(`Cognito user ${cognitoUser.getUsername()} deleted successfully.`);
+      console.log(`Auth-service: Cognito user ${cognitoUser.getUsername()} deleted successfully.`);
     } catch (deleteError) {
-      console.error('Error deleting Cognito user:', deleteError);
+      console.error('Auth-service: Error deleting Cognito user:', deleteError);
     }
   }
 
@@ -101,12 +101,12 @@ class CognitoService {
           const idToken = session.getIdToken().getJwtToken();
           const idTokenPayload = session.getIdToken().payload;
           const refreshToken = session.getRefreshToken().getToken();
-          const userRole = idTokenPayload['custom:role'];
-          const userId = idTokenPayload['custom:userId'];
+          const userRole = idTokenPayload[cognitoCustomAttributes.role];
+          const userId = idTokenPayload[cognitoCustomAttributes.userId];
           resolve({ userId, userRole, idToken, refreshToken });
         },
         onFailure: (err) => {
-          console.log('auth-service ' + err);
+          console.log('Auth-service: ' + err);
           reject(err);
         },
       });

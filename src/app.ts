@@ -6,25 +6,20 @@ import AuthRoutes from './route/auth.route';
 import ProductRoutes from './route/products.route';
 import CategoryRoutes from './route/category.route';
 import CartRoutes from './route/cart.route';
+import OrderRoutes from './route/order.route';
+import { errorHandler } from './helpers/error.handler';
 
 const app: Application = express();
 const authRoutes = new AuthRoutes();
 const productRoutes = new ProductRoutes();
 const categoryRoutes = new CategoryRoutes();
 const cartRoutes = new CartRoutes();
-
-const errorHandler: ErrorRequestHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
-  if (error.response.data.message) {
-    res.status(error.response.status).json(error.response.data);
-  } else {
-    res.status(error.response.status).json(error.response.data);
-  }
-};
+const orderRoutes = new OrderRoutes();
 
 const corsOptions = {
   origin: [
-    'http://localhost:4201',
     'http://localhost:4200',
+    'http://localhost:4201',
     'http://localhost:4202',
     'http://localhost:4203',
     'http://localhost:4205',
@@ -34,11 +29,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/api/auth', authRoutes.getRouter());
-app.use('api/products', productRoutes.getRouter());
-app.use('/api/products', productRoutes.getRouter());
-app.use('/api/category', categoryRoutes.getRouter());
-app.use('/api/carts', cartRoutes.getRouter());
+app.use((req, res, next) => {
+  // Add a one-second delay
+  setTimeout(() => {
+    next(); // Continue to the next middleware or route handler
+  }, 1000); // 1000 milliseconds (1 second) delay
+});
+app.use('/api/v1/auth', authRoutes.getRouter());
+app.use('/api/v1/products', productRoutes.getRouter());
+app.use('/api/v1/category', categoryRoutes.getRouter());
+app.use('/api/v1/carts', cartRoutes.getRouter());
+app.use('/api/v1/orders', orderRoutes.getRouter());
 app.use(errorHandler);
 try {
   app.listen(config.port, (): void => {

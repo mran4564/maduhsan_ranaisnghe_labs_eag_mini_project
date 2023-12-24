@@ -11,7 +11,12 @@ export interface UserSigninDto {
 }
 
 export const UserRoleEnum = {
-  ADMIN: 'Data_Steward',
-  CUSTOMER: 'Customer',
-  SUPPLIER: 'Supplier',
+  ADMIN: 'DATA_STEWARD',
+  CUSTOMER: 'CUSTOMER',
+  SUPPLIER: 'SUPPLIER',
+};
+
+export const cognitoCustomAttributes = {
+  role: 'custom:role',
+  userId: 'custom:userId',
 };
