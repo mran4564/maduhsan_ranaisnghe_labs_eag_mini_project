@@ -12,6 +12,8 @@ import { isValidStatus } from '../helpers/validator';
 import { v4 as uuidv4 } from 'uuid';
 import CartService from './cart.service';
 import { CognitoIdentityProvider } from '@aws-sdk/client-cognito-identity-provider';
+import { resolve } from 'path';
+import { rejects } from 'assert';
 
 class CognitoService {
   private userPool: CognitoUserPool;
@@ -113,7 +115,7 @@ class CognitoService {
     });
   }
 
-  async renewToken(refresh_token: string, username: string): Promise<void> {
+  async renewToken(refresh_token: string, username: string): Promise<any> {
     const RefreshToken = new CognitoRefreshToken({ RefreshToken: refresh_token });
 
     const userData = {
@@ -123,17 +125,18 @@ class CognitoService {
 
     const cognitoUser = new CognitoUser(userData);
 
-    cognitoUser.refreshSession(RefreshToken, (err, session) => {
-      if (err) {
-        console.log(err);
-      } else {
-        const retObj = {
-          access_token: session.accessToken.jwtToken,
-          id_token: session.idToken.jwtToken,
-          refresh_token: session.refreshToken.token,
-        };
-        console.log(retObj);
-      }
+    return new Promise((resolve, reject) => {
+      cognitoUser.refreshSession(RefreshToken, (err, session) => {
+        if (err) {
+          reject(err);
+        } else {
+          const retObj = {
+            id_token: session.idToken.jwtToken,
+            refresh_token: session.refreshToken.token,
+          };
+          resolve(retObj);
+        }
+      });
     });
   }
 }
