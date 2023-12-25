@@ -13,7 +13,7 @@ class OrderRoutes {
 
   private initializeRoutes(): void {
     this.router.post('', this.orderController.createOrder.bind(this.orderController));
-    this.router.put('', this.orderController.getOrdersByCustomer.bind(this.orderController));
+    this.router.get('', this.orderController.getOrdersByCustomer.bind(this.orderController));
     this.router.get('/:id', this.orderController.getOrderByOrderId.bind(this.orderController));
     this.router.get('/order-items', this.orderController.getOrderItemsBySupplier.bind(this.orderController));
     this.router.patch('/order-items/:id', this.orderController.updateOrderItem.bind(this.orderController));

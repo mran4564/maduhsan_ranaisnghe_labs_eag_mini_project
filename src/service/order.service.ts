@@ -2,7 +2,13 @@ import axios from 'axios';
 
 import { Request } from 'express';
 import config from '../config/config';
-import { CreateOrderRequestDto, UpdateOrderItemStatusRequestDto } from '../model/order.model';
+import {
+  CreateOrderRequestDto,
+  OrderItemResponseDto,
+  OrderResponse,
+  UpdateOrderItemStatusRequestDto,
+} from '../model/order.model';
+import { PageResponse } from '../model/product.model';
 import CartService from './cart.service';
 
 class OrderService {
@@ -21,13 +27,12 @@ class OrderService {
   }
 
   async getOrdersByCustomer(req: Request) {
-    const { customer_id } = req.params;
+    const { customer_id } = req.query;
     const response = await axios.get(config.orderApi, {
       params: {
-        customer_id,
+        customer_id: customer_id,
       },
     });
-
     return response.data;
   }
 
@@ -36,14 +41,20 @@ class OrderService {
     return response.data;
   }
   async getOrderItemsBySupplier(req: Request) {
-    const { supplier_id } = req.params;
+    const { supplier_id } = req.query;
     const response = await axios.get(config.orderItemApi, {
       params: {
         supplier_id,
       },
     });
-
-    return response.data;
+    const responseData: PageResponse<OrderItemResponseDto> = {
+      content: response.data.content,
+      pageSize: response.data.size,
+      currentPage: response.data.pageable.pageNumber,
+      totalElements: response.data.totalElements,
+      totalPages: response.data.totalPages,
+    };
+    return responseData;
   }
 
   async updateOrderItemStatus(orderItemId: string, updateOrderItemStatus: UpdateOrderItemStatusRequestDto) {
