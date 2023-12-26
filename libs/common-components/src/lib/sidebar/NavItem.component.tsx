@@ -1,10 +1,10 @@
 import { Box, Text } from '@chakra-ui/react';
 import React from 'react';
-import { CategoryItem } from './Navigation.component';
+import { MenuItem } from './Navigation.component';
 import { useNavigate } from 'react-router-dom';
 
 type NavItemProps = {
-  item: CategoryItem;
+  item: MenuItem;
   activeIndex: number;
   index: number;
   setIsActive: (index: number) => void;

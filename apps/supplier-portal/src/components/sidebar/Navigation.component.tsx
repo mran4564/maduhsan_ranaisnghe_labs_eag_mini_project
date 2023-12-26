@@ -1,4 +1,4 @@
-import { Box, Divider, List, ListItem, Text } from '@chakra-ui/react';
+import { Box, Divider, List, ListItem } from '@chakra-ui/react';
 import { NavItem } from './NavItem.component';
 import { useState } from 'react';
 
@@ -50,9 +50,6 @@ export const Navigation = ({ title = 'Welcome' }: NavaigationProps) => {
   };
   return (
     <Box>
-      <Text fontSize={16} fontWeight={'bold'} color="gray.700">
-        {title}
-      </Text>
       <div style={{ height: '400px', overflowY: 'auto' }}>
         <style>
           {`
@@ -69,8 +66,9 @@ export const Navigation = ({ title = 'Welcome' }: NavaigationProps) => {
           }
         `}
         </style>
-        <Divider my={1} mb={4} mr={3} width={50} borderColor="gray.300" />
+        <Divider my={1} mb={4} mr={3} width={100} borderColor="gray.300" />
         <List>
+          {' '}
           {items.map((item, index) => (
             <ListItem key={index}>
               <NavItem
