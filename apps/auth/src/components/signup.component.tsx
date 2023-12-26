@@ -20,7 +20,7 @@ import {
   HStack,
   useToast,
 } from '@chakra-ui/react';
-import { UserRoleEnum } from '../types/user.type';
+import { UserRoleEnum } from '@b2b-app-mfe/services';
 import { AUTH_API, usePost } from '@b2b-app-mfe/services';
 
 const SignUp = () => {
