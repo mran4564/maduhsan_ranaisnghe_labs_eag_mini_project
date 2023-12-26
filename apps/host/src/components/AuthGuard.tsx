@@ -1,10 +1,10 @@
-import { Outlet, useNavigate } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import React, { ReactNode, useEffect } from 'react';
 import { AuthSlice } from 'global-store/Module';
 import { LoadingSlice } from 'global-store/Module';
 import Loading from './Loading.component';
 
-const AuthGuard = () => {
+const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
   const userData = sessionStorage.getItem('userData');
   const idToken = sessionStorage.getItem('idToken');
   const refreshToken = sessionStorage.getItem('refreshToken');
@@ -26,16 +26,14 @@ const AuthGuard = () => {
         idToken: idToken || '',
         refreshToken: refreshToken || '',
       });
-      console.log(loadingState);
       setLoading(false);
-      navigate('/b2b-app');
+      return children;
     } else {
-      console.log(loadingState);
       navigate('/login');
     }
   };
 
-  return loadingState ? <Loading /> : <Outlet />;
+  return loadingState ? <Loading /> : children;
 };
 
 export default AuthGuard;

@@ -6,8 +6,8 @@ const config: ModuleFederationConfig = {
     'auth',
     'global-store',
     'supplier-portal',
-    'shop',
     'data-steward-portal',
+    'shop',
   ],
 };
 

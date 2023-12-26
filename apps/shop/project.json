@@ -51,7 +51,7 @@
       "options": {
         "buildTarget": "shop:build",
         "hmr": true,
-        "port": 4204
+        "port": 4206
       },
       "configurations": {
         "development": {
@@ -76,7 +76,7 @@
       "options": {
         "buildTarget": "shop:build",
         "watch": false,
-        "port": 4204
+        "port": 4206
       },
       "configurations": {
         "development": {

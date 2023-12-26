@@ -1,11 +1,11 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import Navbar from './NavBar.component';
 import React from 'react';
-import loadSession from '../utils/sessionData';
+import { loadSession } from '@b2b-app-mfe/services';
 
 const SupplierPortal = React.lazy(() => import('supplier-portal/Module'));
-const CustomerShop = React.lazy(() => import('shop/Module'));
 const DataSteward = React.lazy(() => import('data-steward-portal/Module'));
+const CustomerShop = React.lazy(() => import('shop/Module'));
 
 export const UserRoleEnum = {
   DATA_STEWARD: 'DATA_STEWARD',

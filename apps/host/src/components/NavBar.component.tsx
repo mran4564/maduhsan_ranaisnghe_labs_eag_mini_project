@@ -20,6 +20,9 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { FaShoppingCart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { CartSlice } from 'global-store/Module';
+import { UserRoleEnum } from './Main.component';
+import { loadSession } from '@b2b-app-mfe/services';
 
 interface Props {
   children: React.ReactNode;
@@ -51,13 +54,16 @@ const NavLink = (props: Props) => {
 export default function Navbar() {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { showCart } = CartSlice();
+  const { userRole } = loadSession();
 
   const logOut = (basePath = '/') => {
     console.log('Logging out');
-
-    // Clear session storage
     sessionStorage.clear();
-    // Navigate to the base path
+    navigate(basePath);
+  };
+
+  const goToFront = (basePath = '/') => {
     navigate(basePath);
   };
 
@@ -72,7 +78,13 @@ export default function Navbar() {
           onClick={isOpen ? onClose : onOpen}
         />
         <HStack mt={0} spacing={6} alignItems={'center'}>
-          <Text fontSize="xl" color="teal.500" fontWeight="bold">
+          <Text
+            fontSize="xl"
+            color="teal.500"
+            fontWeight="bold"
+            onClick={() => goToFront()}
+            _hover={{ cursor: 'pointer' }}
+          >
             SYSCO SHOP
           </Text>
           <HStack as={'nav'} spacing={3} display={{ base: 'none', md: 'flex' }}>
@@ -82,11 +94,15 @@ export default function Navbar() {
           </HStack>
         </HStack>
         <Flex alignItems={'center'}>
-          <Box mr={'8'}>
-            <button>
-              <FaShoppingCart size={16} />
-            </button>
-          </Box>
+          {userRole === UserRoleEnum.CUSTOMER ? (
+            <Box mr={'8'}>
+              <button onClick={showCart}>
+                <FaShoppingCart size={16} />
+              </button>
+            </Box>
+          ) : (
+            <div></div>
+          )}
           <Menu size={'sm'}>
             <MenuButton
               as={Button}
