@@ -14,7 +14,6 @@ export const loadingSlice = createSlice({
   initialState: initialState,
   reducers: {
     setLoading: (state, action) => {
-      console.log(`laoding ${action.payload}`);
       state.loading = action.payload;
     },
   },

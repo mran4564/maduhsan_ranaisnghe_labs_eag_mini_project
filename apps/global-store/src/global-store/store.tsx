@@ -1,52 +1,41 @@
 import React, { ReactNode } from 'react';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-import { Provider, useSelector, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import authReducer from './feature/auth/authSlice';
-import { apiSlice } from './api/apiSlice';
 import { loadingSlice } from './feature/loading/loadingSlice';
 
-interface CounterState {
-  count: number;
-}
-
-export const counterSlice = createSlice({
-  name: 'counter',
+export const cartSlice = createSlice({
+  name: 'cart',
   initialState: {
-    count: 0,
+    showCart: false,
   },
   reducers: {
-    increment: (state) => {
-      state.count += 1;
-    },
-    clear: (state) => {
-      state.count = 0;
+    setShowCart: (state, action) => {
+      state.showCart = action.payload;
     },
   },
 });
 
-const { increment, clear } = counterSlice.actions;
+const { setShowCart } = cartSlice.actions;
 
 const store = configureStore({
   reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authReducer,
-    counter: counterSlice.reducer,
+    cart: cartSlice.reducer,
     loader: loadingSlice.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
   devTools: true,
 });
 
-export function useStore() {
-  const count = useSelector(
-    (state: { counter: CounterState }) => state.counter.count
+export function CartSlice() {
+  const cartStatus = useSelector(
+    (state: { cart: { showCart: boolean } }) => state.cart.showCart
   );
   const dispatch = useDispatch();
   return {
-    count,
-    increment: () => dispatch(increment()),
-    clear: () => dispatch(clear()),
+    cartStatus,
+    showCart: () => dispatch(setShowCart(true)),
+    hideCart: () => dispatch(setShowCart(false)),
   };
 }
 
