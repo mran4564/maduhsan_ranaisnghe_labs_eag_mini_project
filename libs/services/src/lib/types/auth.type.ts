@@ -11,3 +11,9 @@ export interface UserData {
   userRole: string | null;
   email: string | null;
 }
+
+export const UserRoleEnum = {
+  DATA_STEWARD: 'DATA_STEWARD',
+  CUSTOMER: 'CUSTOMER',
+  SUPPLIER: 'SUPPLIER',
+};
