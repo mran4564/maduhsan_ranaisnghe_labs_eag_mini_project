@@ -1,4 +1,4 @@
-import { Box, SimpleGrid } from '@chakra-ui/react';
+import { Box, SimpleGrid, useToast } from '@chakra-ui/react';
 import {
   ProductApproveStatusEnum,
   useProductsCustomers,
@@ -13,6 +13,7 @@ import CartDrawer from '../cart/CartDrawer.component';
 
 const ProductGrid = () => {
   const { category_id } = useParams();
+  const toast = useToast();
   const { data, error, isLoading } = useProductsCustomers(
     {
       page: 0,
@@ -22,6 +23,18 @@ const ProductGrid = () => {
     category_id ?? ''
   );
   useEffect(() => {}, [category_id]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast({
+        position: 'bottom-right',
+        description: error,
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [error]);
 
   if (error) {
     <div>{error}</div>;
