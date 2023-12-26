@@ -81,7 +81,6 @@ export const authorize = function (roles: string[] = []) {
       };
 
       const userRole: any = resultValidation['custom:role'];
-      console.log(resultValidation);
 
       if (roles.indexOf(userRole) === -1) return res.status(401).json({ message: 'Not Autherized for this Action' });
       next();
@@ -104,8 +103,6 @@ declare global {
 export const Roles = {
   Supplier: ['SUPPLIER'],
   Customer: ['CUSTOMER'],
-  Admin: ['ADMIN'],
-  All: ['SUPPLIER', 'CUSTOMER', 'ADMIN'],
+  Admin: ['DATA_STEWARD'],
+  All: ['SUPPLIER', 'CUSTOMER', 'DATA_STEWARD'],
 };
-
-// export { validateTokenMiddleware };

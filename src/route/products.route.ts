@@ -13,11 +13,15 @@ class ProductRoutes {
   }
 
   private initializeRoutes(): void {
-    this.router.post('', this.productController.createProduct.bind(this.productController));
-    this.router.get('', this.productController.getProducts.bind(this.productController));
-    this.router.get('/:id', this.productController.getProductById.bind(this.productController));
-    this.router.put('/:id', this.productController.updateProduct.bind(this.productController));
-    this.router.patch('/:id', this.productController.approveProduct.bind(this));
+    this.router.post('', authorize(Roles.Supplier), this.productController.createProduct.bind(this.productController));
+    this.router.get('', authorize(Roles.All), this.productController.getProducts.bind(this.productController));
+    this.router.get('/:id', authorize(Roles.All), this.productController.getProductById.bind(this.productController));
+    this.router.put(
+      '/:id',
+      authorize(Roles.Supplier),
+      this.productController.updateProduct.bind(this.productController),
+    );
+    this.router.patch('/:id', authorize(Roles.Admin), this.productController.approveProduct.bind(this));
     this.router.delete(
       '/:id',
       authorize(Roles.Supplier),

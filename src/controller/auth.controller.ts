@@ -32,10 +32,10 @@ class AuthController {
   }
 
   async refreshToken(req: Request, res: Response): Promise<void> {
-    const { refresh_token, email } = req.body;
+    const { refreshToken, email } = req.body;
     try {
-      const data = await this.authService.renewToken(refresh_token, email);
-      res.status(200).json({ data });
+      const data = await this.authService.renewToken(refreshToken, email);
+      res.status(200).json(data);
     } catch (error) {
       res.status(401).json({ message: 'Authentication failed', error });
     }

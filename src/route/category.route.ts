@@ -14,8 +14,8 @@ class CategoryRoutes {
   }
 
   private initializeRoutes(): void {
-    this.router.post('', this.categoryController.createCategory.bind(this.categoryController));
-    this.router.get('', this.categoryController.getAll.bind(this.categoryController));
+    this.router.post('', authorize(Roles.All), this.categoryController.createCategory.bind(this.categoryController));
+    this.router.get('', authorize(Roles.All), this.categoryController.getAll.bind(this.categoryController));
   }
 
   public getRouter(): Router {
