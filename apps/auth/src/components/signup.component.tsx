@@ -64,7 +64,7 @@ const SignUp = () => {
       role,
     });
     if (response) {
-      navigate('/verifiy');
+      navigate('/verify');
     }
   };
 
@@ -76,7 +76,9 @@ const SignUp = () => {
     <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
       <Flex p={8} flex={3} align={'center'} justify={'center'}>
         <Stack spacing={4} w={'full'} maxW={'md'}>
-          <Heading fontSize={'2xl'}>Register to your account</Heading>
+          <Heading fontSize={'2xl'} mb={4}>
+            Register to your account!
+          </Heading>
           <form onSubmit={handleSubmit}>
             <FormControl id="name" isRequired>
               <FormLabel> {isChecked ? 'Brand Name' : 'Full Name'} </FormLabel>
@@ -127,14 +129,14 @@ const SignUp = () => {
               >
                 <Box></Box>
                 <HStack>
-                  <Text>Supplier</Text>
+                  <Text color={'teal.500'}>Supplier</Text>
                   <Checkbox
                     isChecked={isChecked}
                     onChange={handleCheckboxChange}
                   ></Checkbox>
                 </HStack>
               </Stack>
-              <Button colorScheme={'blue'} variant={'solid'} type="submit">
+              <Button colorScheme={'teal'} variant={'solid'} type="submit">
                 {isLoading ? (
                   <CircularProgress isIndeterminate size="24px" color="teal" />
                 ) : (
@@ -148,7 +150,7 @@ const SignUp = () => {
             _hover={{ cursor: 'pointer' }}
             onClick={goToSignIn}
             textAlign="center"
-            color={'blue.500'}
+            color={'teal.500'}
           >
             Already have an account? <Text as="b">Login</Text>
           </Text>
