@@ -1,5 +1,6 @@
-import axios, { AxiosRequestConfig, CanceledError } from 'axios';
+import { AxiosRequestConfig, CanceledError } from 'axios';
 import { useEffect, useState } from 'react';
+import api from '../utils/interceptor.api';
 
 interface FetchResponse<T> {
   content: T[];
@@ -16,7 +17,7 @@ export interface PageData {
   totalElements?: number;
 }
 
-const useData = <T>(
+export const useData = <T>(
   endpoint: string,
   requestConfig?: AxiosRequestConfig,
   deps?: unknown[]
@@ -30,18 +31,18 @@ const useData = <T>(
   const [error, setError] = useState('');
   const [isLoading, setLoading] = useState(false);
 
-  const handlePagination = (newPageNo: number) => {
-    const controller = new AbortController();
+  const handlePagination = (newPageNo: number, status: string) => {
     const configs: AxiosRequestConfig = {
       ...requestConfig,
       params: {
         page: newPageNo,
+        status: status,
       },
     };
+    setData([]);
     setLoading(true);
-    axios
+    api
       .get<FetchResponse<T>>(endpoint, {
-        signal: controller.signal,
         ...configs,
       })
       .then((res) => {
@@ -58,18 +59,14 @@ const useData = <T>(
         setError(err.message);
         setLoading(false);
       });
-
-    return () => controller.abort();
   };
 
   useEffect(
     () => {
-      const controller = new AbortController();
-
+      setData([]);
       setLoading(true);
-      axios
+      api
         .get<FetchResponse<T>>(endpoint, {
-          signal: controller.signal,
           ...requestConfig,
         })
         .then((res) => {
@@ -79,7 +76,6 @@ const useData = <T>(
             totalPages: res.data.totalPages,
             currentPage: res.data.currentPage,
           });
-          console.log(res);
           setLoading(false);
         })
         .catch((err) => {
@@ -87,13 +83,10 @@ const useData = <T>(
           setError(err.message);
           setLoading(false);
         });
-
-      return () => controller.abort();
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     deps ? [...deps] : []
   );
 
   return { data, pageData, error, isLoading, handlePagination };
 };
-
-export default useData;

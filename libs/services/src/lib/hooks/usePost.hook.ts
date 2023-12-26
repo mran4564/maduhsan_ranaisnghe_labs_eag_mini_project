@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-interface ErrorResponse {
+export interface ErrorResponse {
   message: string;
 }
 
-export function usePost(endpoint: string) {
+export const usePost = (endpoint: string) => {
   const [error, setError] = useState<string>('');
   const [isLoading, setLoading] = useState(false);
 
@@ -45,7 +45,7 @@ export function usePost(endpoint: string) {
     return null;
   };
   return { postData, isLoading, error };
-}
+};
 
 export const getErrorMessage = (response: AxiosResponse) => {
   if (!response || !response.status) {
