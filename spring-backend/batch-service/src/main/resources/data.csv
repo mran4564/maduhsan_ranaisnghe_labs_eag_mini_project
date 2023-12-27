@@ -1,4 +1,0 @@
-productId,productName,supplierBrandName,supplierId,quantity,deliveryAddress,deliveryDate,customerId,customerName,customerEmail
-123e4567-e89b-12d3-a456-426614174001,Product1,Supplier1,456e89b0-12d3-a456-4260-614174001234,100,Address1,12/6/2023,656e89b0-12d3-a456-4260-614174001234,Customer1,customer1@example.com
-223e4567-e89b-12d3-a456-426614174002,Product2,Supplier2,556e89b0-12d3-a456-4260-614174001234,150,Address2,12/7/2023,656e89b0-12d3-a456-4260-614174001234,Customer2,customer2@example.com
-323e4567-e89b-12d3-a456-426614174003,Product3,Supplier3,656e89b0-12d3-a456-4260-614174001234,200,Address3,12/8/2023,656e89b0-12d3-a456-4260-614174001234,Customer3,customer3@example.com
