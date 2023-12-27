@@ -8,9 +8,10 @@ import org.b2b_system.order.mapper.OrderItemMapper;
 import org.b2b_system.order.repository.OrderItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -21,10 +22,9 @@ public class OrderItemServiceImpl implements OrderItemService {
     Logger logger = LoggerFactory.getLogger(OrderItemServiceImpl.class);
 
     @Override
-    public List<OrderItemResponse> getOrderItems(UUID supplierId) {
-        return orderItemRepository.findBySupplierId(supplierId)
-                .stream().map(OrderItemMapper::mapOrderItemToResponse)
-                .toList();
+    public Page<OrderItemResponse> getOrderItems(Pageable page, UUID supplierId) {
+        return orderItemRepository.findBySupplierId(supplierId,page)
+                .map(OrderItemMapper::mapOrderItemToResponse);
     }
 
     @Override

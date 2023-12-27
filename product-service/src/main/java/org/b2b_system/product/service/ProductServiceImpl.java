@@ -64,7 +64,6 @@ public class ProductServiceImpl implements ProductService {
      */
     public Page<ProductResponse> getAllProducts(Pageable pageable, UUID categoryId,
                                                 String brandName, Boolean isInStock, ApproveStatus status) {
-
         return productRepository
                 .findProductMatch(categoryId, brandName, isInStock, status, pageable)
                 .map(this::mapProductToResponse);
