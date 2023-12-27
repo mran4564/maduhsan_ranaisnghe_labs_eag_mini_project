@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { Request } from 'express';
-import { PageResponse, ProductApproveRequest, ProductCreateDTO, ProductUpdateDTO } from '../model/product.model';
+import {
+  PageResponse,
+  ProductApproveRequest,
+  ProductCreateDTO,
+  ProductResponse,
+  ProductUpdateDTO,
+} from '../model/product.model';
 import config from '../config/config';
 
 class ProductService {
@@ -23,7 +29,7 @@ class ProductService {
         status,
       },
     });
-    const responseData: PageResponse = {
+    const responseData: PageResponse<ProductResponse> = {
       content: response.data.content,
       pageSize: response.data.size,
       currentPage: response.data.pageable.pageNumber,

@@ -33,8 +33,8 @@ export interface ProductResponse {
   price: number;
 }
 
-export interface PageResponse {
-  content: ProductResponse[];
+export interface PageResponse<T> {
+  content: T[];
   currentPage: number;
   totalPages: number;
   pageSize: number;

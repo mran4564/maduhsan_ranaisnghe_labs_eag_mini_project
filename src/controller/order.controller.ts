@@ -18,8 +18,8 @@ class OrderController {
 
   async getOrdersByCustomer(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const data = await orderService.getOrdersByCustomer(req);
-      res.status(200).json(data);
+      const content = await orderService.getOrdersByCustomer(req);
+      res.status(200).json({ content });
     } catch (error) {
       next(error);
     }
