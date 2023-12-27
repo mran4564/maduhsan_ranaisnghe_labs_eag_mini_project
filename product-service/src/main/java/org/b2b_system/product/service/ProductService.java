@@ -4,6 +4,7 @@ import org.b2b_system.product.dto.product.ApproveProductRequest;
 import org.b2b_system.product.dto.product.ProductRequest;
 import org.b2b_system.product.dto.product.ProductResponse;
 import org.b2b_system.product.dto.product.UpdateProductRequest;
+import org.b2b_system.product.model.ApproveStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,7 +14,8 @@ public interface ProductService {
 
     ProductResponse createProduct(ProductRequest request);
 
-    Page<ProductResponse> getAllProducts(Pageable pageable, UUID categoryId, String brandName, Boolean isInStock);
+    Page<ProductResponse> getAllProducts(Pageable pageable, UUID categoryId, String brandName, Boolean isInStock,
+                                         ApproveStatus status);
 
     ProductResponse getProductDetails(UUID id);
 

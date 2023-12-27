@@ -134,6 +134,7 @@ public class CartServiceImpl implements CartService {
         return CartItemResponse.builder()
                 .cartItemId(cartItem.getCartItemId())
                 .productId(cartItem.getProductId())
+                .unitPrice(cartItem.getUnitPrice())
                 .quantity(cartItem.getQuantity())
                 .total(cartItem.getTotal())
                 .build();
@@ -147,6 +148,7 @@ public class CartServiceImpl implements CartService {
                 .cartItemId(UUID.randomUUID())
                 .productId(cartItemRequest.getProductId())
                 .total(cartItemTotalPrice)
+                .unitPrice(cartItemRequest.getUnitPrice())
                 .quantity(cartItemRequest.getQuantity())
                 .build();
     }

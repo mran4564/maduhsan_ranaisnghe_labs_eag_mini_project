@@ -29,16 +29,17 @@ public class Product {
     private String imageUrl;
     private boolean isInStock;
     private UUID categoryId;
+    private String categoryName;
     private UUID supplierId;
     private String brandName;
     private BigDecimal price;
     private ApproveStatus status;
 
-    public void updateStock(boolean increase, int quantity){
-        if(increase){
+    public void updateStock(boolean increase, int quantity) {
+        if (increase) {
             this.stockCount += quantity;
-        }else{
-            if(this.stockCount < quantity){
+        } else {
+            if (this.stockCount < quantity) {
                 throw new InsufficientStockException("Invalid quantity for update");
             }
             this.stockCount -= quantity;

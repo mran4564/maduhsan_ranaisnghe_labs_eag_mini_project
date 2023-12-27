@@ -6,6 +6,7 @@ import org.b2b_system.product.dto.product.ApproveProductRequest;
 import org.b2b_system.product.dto.product.ProductRequest;
 import org.b2b_system.product.dto.product.ProductResponse;
 import org.b2b_system.product.dto.product.UpdateProductRequest;
+import org.b2b_system.product.model.ApproveStatus;
 import org.b2b_system.product.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,11 +42,12 @@ public class ProductController {
             @RequestParam(name = "size", defaultValue = "10") int size,
             @RequestParam(name = "category_id", required = false) UUID categoryId,
             @RequestParam(name = "brand_name", required = false) String brandName,
-            @RequestParam(name = "in_stock", required = false) Boolean isInStock
+            @RequestParam(name = "in_stock", required = false) Boolean isInStock,
+            @RequestParam(name = "status", required = false) ApproveStatus status
     ) {
         Pageable pageRequest = PageRequest.of(page, size);
         return new ResponseEntity<>(productService.
-                getAllProducts(pageRequest, categoryId, brandName, isInStock), HttpStatus.OK);
+                getAllProducts(pageRequest, categoryId, brandName, isInStock, status), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

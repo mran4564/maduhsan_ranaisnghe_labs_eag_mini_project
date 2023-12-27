@@ -1,8 +1,10 @@
 package org.b2b_system.product.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.b2b_system.product.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -38,6 +40,18 @@ public class ApplicationExceptionHandler  {
                         .uri(request.getRequestURI())
                         .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
                         .build(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Object> handleDatabaseAccessException(DataAccessException e,
+                                                            HttpServletRequest request) {
+        return new ResponseEntity<>(
+                ErrorResponse.builder()
+                        .status(HttpStatus.CONFLICT)
+                        .message(Constants.DATABASE_ACCESS_EXCEPTION_MESSAGE)
+                        .uri(request.getRequestURI())
+                        .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
+                        .build(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoSuchElementFoundException.class)

@@ -23,6 +23,7 @@ public class CartItem {
     private int id;
     private UUID cartItemId;
     private UUID productId;
+    private BigDecimal unitPrice;
     private int quantity;
     private BigDecimal total;
     @ManyToOne(
