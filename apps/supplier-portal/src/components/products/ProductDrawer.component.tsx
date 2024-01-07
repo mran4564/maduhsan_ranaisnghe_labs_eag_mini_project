@@ -17,18 +17,20 @@ import {
   DrawerFooter,
 } from '@chakra-ui/react';
 import { UnlockIcon, LockIcon } from '@chakra-ui/icons';
-import { Product } from '../../api/products.api';
+import { ProductResponse } from '@b2b-app-mfe/services';
 
 export type ProductPreviewDrawerProps = {
   isOpen: boolean;
   onClose: () => void;
-  productData: Product;
+  productData: ProductResponse;
+  setData: () => void;
 };
 
 const ProductPreviewDrawer = ({
   isOpen,
   onClose,
   productData,
+  setData,
 }: ProductPreviewDrawerProps) => {
   const [isEditing, setEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState(productData);
@@ -107,17 +109,7 @@ const ProductPreviewDrawer = ({
               </Tr>
               <Tr>
                 <Td>Availability:</Td>
-                <Td>
-                  {isEditing ? (
-                    <Input
-                      name="availability"
-                      value={productData.instock}
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    productData.instock
-                  )}
-                </Td>
+                <Td></Td>
               </Tr>
             </Tbody>
           </Table>

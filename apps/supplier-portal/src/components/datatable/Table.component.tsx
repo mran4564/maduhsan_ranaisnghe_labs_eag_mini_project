@@ -1,21 +1,54 @@
-import { Box, Thead, Tr, Th, HStack, Tbody, Td, Table } from '@chakra-ui/react';
-import { useMemo, useState } from 'react';
+import {
+  Box,
+  Thead,
+  Tr,
+  Th,
+  HStack,
+  Tbody,
+  Td,
+  Table,
+  Flex,
+  Heading,
+} from '@chakra-ui/react';
+import { useMemo } from 'react';
 import { Column, useTable } from 'react-table';
-import ProductPreviewDrawer from '../products/ProductDrawer.component';
-import { Product } from '../../api/products.api';
+import { AiOutlineInbox } from 'react-icons/ai';
 
 type TableProps<T extends object> = {
   columns: ReadonlyArray<Column<T>>;
   data: T[];
   isLoading: boolean;
   manualPagination: boolean;
+  setSelectItem: <T extends object>(item: T) => void;
+  openDrawer: () => void;
 };
+
+const NoData = () => (
+  <Flex
+    align="center"
+    justify="center"
+    height="200px"
+    borderWidth="1px"
+    borderRadius="md"
+    borderColor="gray.200"
+    p="4"
+  >
+    <Box textAlign="center">
+      <AiOutlineInbox size={40} color="#999" />
+      <Heading as="h3" size="md" color="gray.500" mt="2">
+        No data available
+      </Heading>
+    </Box>
+  </Flex>
+);
 
 function DataTable<T extends object>({
   columns,
   data,
   isLoading,
   manualPagination = false,
+  setSelectItem,
+  openDrawer,
 }: TableProps<T>) {
   const columnData = useMemo(() => columns, [columns]);
   const rowData = useMemo(() => data, [data]);
@@ -24,51 +57,17 @@ function DataTable<T extends object>({
       columns: columnData,
       data: rowData,
     });
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product>({
-    name: '',
-    instock: '',
-    productId: '',
-    brandName: '',
-    stockCount: '',
-    price: 0,
-  });
-
-  // const Td = ({ cell, children, className, minW }) => {
-  //   return (
-  //     <td
-  //       {...cell.getCellProps()}
-  //       className={className}
-  //       style={{ minWidth: minW }}
-  //     >
-  //       {cell.column.id === 'selectColumn' ? (
-  //         <select
-  //           value={cell.value}
-  //           onChange={(e) => cell.onChange(e.target.value)}
-  //         >
-  //           {/* Populate options based on your data or static options */}
-  //           <option value="option1">Option 1</option>
-  //           <option value="option2">Option 2</option>
-  //           <option value="option3">Option 3</option>
-  //         </select>
-  //       ) : (
-  //         children
-  //       )}
-  //     </td>
-  //   );
-  // };
-
-  const handleRowClick = (productData: Product) => {
-    setSelectedProduct(productData);
-    console.log(selectedProduct);
-    setDrawerOpen(true);
+  const hasData = data && data.length > 0;
+  const handleRowClick = (productData: T) => {
+    setSelectItem(productData);
+    openDrawer();
   };
 
-  const closeDrawer = () => {
-    setDrawerOpen(false);
-  };
-
-  return (
+  return !hasData ? (
+    <div>
+      <NoData />
+    </div>
+  ) : (
     <div style={{ height: '410px', overflowY: 'auto', overflowX: 'hidden' }}>
       <style>
         {`
@@ -120,7 +119,7 @@ function DataTable<T extends object>({
               <Tr
                 height={4}
                 {...row.getRowProps()}
-                onClick={() => handleRowClick(row.original as Product)}
+                onClick={() => handleRowClick(row.original)}
                 bg={''}
                 _hover={{ bg: 'gray.100', cursor: 'pointer' }}
                 fontSize={10}
@@ -143,11 +142,6 @@ function DataTable<T extends object>({
           })}
         </Tbody>
       </Table>
-      <ProductPreviewDrawer
-        isOpen={isDrawerOpen}
-        onClose={closeDrawer}
-        productData={selectedProduct}
-      />
     </div>
   );
 }
