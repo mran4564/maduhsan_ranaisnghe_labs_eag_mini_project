@@ -13,13 +13,13 @@ import org.b2b_system.product.model.Category;
 import org.b2b_system.product.model.Product;
 import org.b2b_system.product.repository.CategoryRepository;
 import org.b2b_system.product.repository.ProductRepository;
-import org.b2b_system.product.utils.ErrorMessages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.util.UUID;
 
 /**
@@ -78,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse getProductDetails(UUID id) {
         var product = productRepository.findByProductId(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        ErrorMessages.ProductNotFound.formatted(id)));
+                        Constants.PRODUCT_NOT_FOUND_EXCEPTION_MESSAGE.formatted(id)));
 
         return mapProductToResponse(product);
     }
@@ -93,8 +93,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse updateProductDetails(UUID id, UpdateProductRequest request) {
         var product = productRepository.findByProductId(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        ErrorMessages.ProductNotFound.formatted(id)));
-
+                        Constants.PRODUCT_NOT_FOUND_EXCEPTION_MESSAGE.formatted(id)));
+        if(request.getStockCount() < 0){
+            throw  new InvalidParameterException();
+        }
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setStockCount(request.getStockCount());
@@ -137,26 +139,7 @@ public class ProductServiceImpl implements ProductService {
                     return mapProductToResponse(product);
                 }
         ).orElseThrow(() -> new EntityNotFoundException(
-                ErrorMessages.ProductNotFound.formatted(id)));
-    }
-
-    /**
-     * increase or decrease the product quantity
-     *
-     * @param id       product id
-     * @param quantity product quantity
-     * @param increase operation need to be done increase or decrease
-     * @return updated product
-     */
-    public ProductResponse updateProductStock(UUID id, int quantity, boolean increase) {
-        var product = productRepository.findByProductId(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        ErrorMessages.ProductNotFound.formatted(id)));
-        product.updateStock(increase, quantity);
-        var updatedProduct = productRepository.save(product);
-        logger.info("Product quantity updated successfully");
-
-        return mapProductToResponse(updatedProduct);
+                Constants.PRODUCT_NOT_FOUND_EXCEPTION_MESSAGE.formatted(id)));
     }
 
     private ProductResponse mapProductToResponse(Product product) {

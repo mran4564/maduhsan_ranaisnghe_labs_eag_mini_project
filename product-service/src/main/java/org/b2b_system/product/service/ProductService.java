@@ -24,6 +24,4 @@ public interface ProductService {
     String deleteProduct(UUID id);
 
     ProductResponse approveProduct(UUID id, ApproveProductRequest approveProductRequest);
-
-    ProductResponse updateProductStock(UUID id, int quantity, boolean increase);
 }

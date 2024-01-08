@@ -9,7 +9,5 @@ import java.util.UUID;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     boolean existsByName(String name);
 
-    boolean existsByCategoryId(UUID id);
-
     Optional<Category> findByCategoryId(UUID id);
 }
