@@ -8,6 +8,8 @@ spring:
     username: root
     password: admin
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      max-lifetime: 10000
 
   jpa:
     hibernate:

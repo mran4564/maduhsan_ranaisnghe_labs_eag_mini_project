@@ -25,6 +25,7 @@ public class Product {
     private UUID productId;
     private String description;
     private int stockCount;
+    @Column(length = 5000)
     private String imageUrl;
     private boolean isInStock;
     private UUID categoryId;
