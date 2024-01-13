@@ -1,15 +1,22 @@
 package org.b2b_system.user.exception;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.b2b_system.user.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.NotAcceptableStatusException;
+import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -24,9 +31,22 @@ public class ApplicationExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleInvalidArgument(MethodArgumentNotValidException exception) {
+
         return exception.getBindingResult().getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Object> handleDatabaseAccessException(DataAccessException e,
+                                                                HttpServletRequest request) {
+        return new ResponseEntity<>(
+                ErrorResponse.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .message(Constants.DATABASE_ACCESS_EXCEPTION_MESSAGE)
+                        .uri(request.getRequestURI())
+                        .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
+                        .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
@@ -52,6 +72,27 @@ public class ApplicationExceptionHandler {
                         .uri(request.getRequestURI())
                         .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
                         .build(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleUnknownException(Exception e, HttpServletRequest request) {
+
+        if (e instanceof JsonParseException || e instanceof UnsupportedMediaTypeStatusException ||
+                e instanceof InvalidMediaTypeException || e instanceof NotAcceptableStatusException) {
+            logger.error("Invalid Json request {}", e.getMessage());
+        }
+        var message = ExceptionUtils.getMessage(e);
+        var stackTrace = ExceptionUtils.getStackTrace(e);
+        logger.error("Unknown exception occurred {} {}", message, stackTrace);
+
+        return new ResponseEntity<>(
+                ErrorResponse.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .message(Constants.UNEXPECTED_ERROR_OCCURRED)
+                        .uri(request.getRequestURI())
+                        .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
+                        .build(), HttpStatus.BAD_REQUEST);
     }
 
 }
