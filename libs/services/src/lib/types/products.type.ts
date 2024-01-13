@@ -104,6 +104,7 @@ export const formatRowData = (rawData: ProductResponse[]) =>
 
 export const ProductApi = {
   createProduct: PRODUCTS_API,
+  uploadImage: PRODUCTS_API + '/upload',
   approveProduct: (productId: string) => PRODUCTS_API + `/${productId}`,
   getProducts: PRODUCTS_API,
   getProductById: (productId: string) => PRODUCTS_API + `/${productId}`,

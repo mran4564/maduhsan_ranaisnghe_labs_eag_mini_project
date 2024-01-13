@@ -1,4 +1,5 @@
 import { ORDER_API } from '../constants/api.constants';
+import { OrderItemResponse } from './orderItem.type';
 
 export interface CreateOrderRequest {
   customerId: string;
@@ -8,7 +9,7 @@ export interface CreateOrderRequest {
 
 export interface OrderItemRequest {
   productId: string;
-  supplierId: string;
+  supplierId?: string;
   unitPrice: number;
   quantity: number;
 }
@@ -16,28 +17,12 @@ export interface OrderItemRequest {
 export interface OrderResponse {
   customerId: string;
   orderId: string;
-  orderItems: OrderItemResponseDto[];
+  orderItems: OrderItemResponse[];
   totalPrice: number;
 }
 
-export interface OrderItemResponseDto {
-  orderItemId: string;
-  productId: string;
-  supplierId: string;
-  status: OrderItemStatus;
-  quantity: number;
-  total: number;
-}
-
 export interface UpdateOrderItemStatusRequestDto {
-  orderItemStatus: OrderItemStatus;
-}
-
-export enum OrderItemStatus {
-  CONFIRMED,
-  UNCONFIRMED,
-  REJECTED,
-  COMPLETE,
+  orderItemStatus: string;
 }
 
 export enum OrderStatus {

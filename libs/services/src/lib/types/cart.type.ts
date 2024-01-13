@@ -42,4 +42,5 @@ export interface AddCartItemRequestDto {
 export interface updateCartItemRequestDto {
   unitPrice: number;
   quantity: number;
+  productId: string;
 }
