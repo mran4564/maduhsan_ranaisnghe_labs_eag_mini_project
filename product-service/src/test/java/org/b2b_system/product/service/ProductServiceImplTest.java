@@ -6,6 +6,7 @@ import org.b2b_system.product.dto.product.ProductRequest;
 import org.b2b_system.product.dto.product.ProductResponse;
 import org.b2b_system.product.dto.product.UpdateProductRequest;
 import org.b2b_system.product.exception.EntityAlreadyExistsException;
+import org.b2b_system.product.exception.NoSuchElementFoundException;
 import org.b2b_system.product.model.ApproveStatus;
 import org.b2b_system.product.model.Category;
 import org.b2b_system.product.model.Product;
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -121,7 +122,7 @@ class ProductServiceImplTest {
         when(categoryRepository.findByCategoryId(any())).thenReturn(java.util.Optional.empty());
 
         // Act and Assert
-        assertThrows(EntityNotFoundException.class, () -> underTest.createProduct(request));
+        assertThrows(NoSuchElementFoundException.class, () -> underTest.createProduct(request));
     }
 
     @Test

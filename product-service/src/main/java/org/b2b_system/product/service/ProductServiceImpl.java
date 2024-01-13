@@ -8,6 +8,8 @@ import org.b2b_system.product.dto.product.ProductRequest;
 import org.b2b_system.product.dto.product.ProductResponse;
 import org.b2b_system.product.dto.product.UpdateProductRequest;
 import org.b2b_system.product.exception.EntityAlreadyExistsException;
+import org.b2b_system.product.exception.InternalException;
+import org.b2b_system.product.exception.NoSuchElementFoundException;
 import org.b2b_system.product.model.ApproveStatus;
 import org.b2b_system.product.model.Category;
 import org.b2b_system.product.model.Product;
@@ -15,6 +17,7 @@ import org.b2b_system.product.repository.CategoryRepository;
 import org.b2b_system.product.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,10 +46,12 @@ public class ProductServiceImpl implements ProductService {
      */
     public ProductResponse createProduct(ProductRequest request) {
         if (productRepository.existsByName(request.getName())) {
-            throw new EntityAlreadyExistsException(Constants.PRODUCT_NAME_AVAILABLE_EXCEPTION_MESSAGE.formatted(request.getName()));
+            throw new EntityAlreadyExistsException(Constants.PRODUCT_NAME_AVAILABLE_EXCEPTION_MESSAGE
+                    .formatted(request.getName()));
         }
         var category = categoryRepository.findByCategoryId(request.getCategoryId()).orElseThrow(
-                () -> new EntityNotFoundException(Constants.CATEGORY_NOT_FOUND_EXCEPTION_MESSAGE.formatted(request.getCategoryId())));
+                () -> new NoSuchElementFoundException(Constants.CATEGORY_NOT_FOUND_EXCEPTION_MESSAGE
+                        .formatted(request.getCategoryId())));
 
         var product = mapRequestToProduct(request, category);
         var savedProduct = productRepository.save(product);
@@ -91,22 +96,28 @@ public class ProductServiceImpl implements ProductService {
      * @return ProductResponse
      */
     public ProductResponse updateProductDetails(UUID id, UpdateProductRequest request) {
-        var product = productRepository.findByProductId(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        Constants.PRODUCT_NOT_FOUND_EXCEPTION_MESSAGE.formatted(id)));
-        if(request.getStockCount() < 0){
-            throw  new InvalidParameterException();
-        }
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setStockCount(request.getStockCount());
-        product.setInStock(request.isInStock());
-        product.setImageUrl(request.getImageUrl());
-        product.setPrice(request.getPrice());
-        var updatedCategory = productRepository.save(product);
-        logger.info("Product with Id:{} Updated successfully", product.getProductId());
+        try {
+            var product = productRepository.findByProductId(id)
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            Constants.PRODUCT_NOT_FOUND_EXCEPTION_MESSAGE.formatted(id)));
+            if (request.getStockCount() < 0) {
+                throw new InvalidParameterException();
+            }
 
-        return mapProductToResponse(updatedCategory);
+            product.setName(request.getName());
+            product.setDescription(request.getDescription());
+            product.setStockCount(request.getStockCount());
+            product.setInStock(request.isInStock());
+            product.setImageUrl(request.getImageUrl());
+            product.setPrice(request.getPrice());
+
+            var updatedCategory = productRepository.save(product);
+            logger.info("Product with Id:{} Updated successfully", product.getProductId());
+
+            return mapProductToResponse(updatedCategory);
+        } catch (DataAccessException exception) {
+            throw new InternalException("Internal Server Error Occurred");
+        }
     }
 
     /**
