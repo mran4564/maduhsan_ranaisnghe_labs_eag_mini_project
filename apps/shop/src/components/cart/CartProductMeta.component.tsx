@@ -16,6 +16,7 @@ export type CartProductMetaProps = {
 
 export const CartProductMeta = (props: CartProductMetaProps) => {
   const { image, name, description, price } = props;
+  const shortedDescription = description.slice(0, 100);
   return (
     <Stack direction="row" spacing="5" width="full">
       <Image
@@ -32,7 +33,7 @@ export const CartProductMeta = (props: CartProductMetaProps) => {
         <Stack spacing="0.3">
           <Text fontWeight="medium">{name}</Text>
           <Text color={mode('gray.600', 'gray.400')} fontSize="sm">
-            {description}
+            {shortedDescription} ...
           </Text>
           <Text
             fontSize="sm"

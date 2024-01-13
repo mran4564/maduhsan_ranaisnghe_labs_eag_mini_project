@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import {
   Image,
   useToast,
 } from '@chakra-ui/react';
-import { useDropzone, FileWithPath, FileRejection } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import {
   ProductApi,
   useCategory,
@@ -20,6 +20,7 @@ import {
 } from '@b2b-app-mfe/services';
 
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const ProductCreatePage = () => {
   const [formData, setFormData] = useState({
@@ -46,30 +47,42 @@ const ProductCreatePage = () => {
     }));
   }, [categoryData]);
 
-  const onDrop = async (
-    acceptedFiles: FileWithPath[],
-    rejectedFiles: FileRejection[]
-  ) => {
-    try {
-      const imageUrl = await uploadToS3(acceptedFiles);
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
 
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post(ProductApi.uploadImage, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       setFormData((prevData) => ({
         ...prevData,
-        imageUrl,
+        imageUrl: response.data,
       }));
-    } catch (error) {
-      console.error('Error uploading image to S3:', error);
+
+      toast({
+        position: 'bottom-right',
+        description: 'Image uploaded successfully',
+        status: 'success',
+        isClosable: true,
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast({
+        position: 'bottom-right',
+        description: 'Image uploaded failed',
+        status: 'error',
+        isClosable: true,
+      });
     }
-  };
-
-  const uploadToS3 = async (file: FileWithPath[]) => {
-    // Replace this with S3 upload logic
-    return 'https://your-s3-bucket-url.com/' + file[0].name;
-  };
-
+  }, []);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    multiple: false,
+    multiple: false, // Allow only single file upload
   });
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
@@ -142,8 +155,8 @@ const ProductCreatePage = () => {
             <Box>
               <FormControl ml={4}>
                 <FormLabel>Image</FormLabel>
-                <div {...getRootProps()} style={{ width: '100%' }}>
-                  <input {...getInputProps()} accept="image/*" />
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
                   {formData.imageUrl ? (
                     <Image
                       borderRadius={4}

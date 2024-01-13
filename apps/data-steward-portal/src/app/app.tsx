@@ -1,6 +1,6 @@
+import { Dashboard } from '@b2b-app-mfe/common-components';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Routes, Route } from 'react-router-dom';
-import Dashboard from '../components/dashboard/dashboard.component';
 import StewardDashboard from '../components/Main.component';
 import ApprovedProducts from '../components/products/Approved-Products.component';
 import PendingProducts from '../components/products/Pending-Products.component';

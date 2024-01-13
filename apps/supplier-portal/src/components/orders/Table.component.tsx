@@ -13,9 +13,9 @@ import {
 import { useMemo } from 'react';
 import { Column, useTable } from 'react-table';
 import { AiOutlineInbox } from 'react-icons/ai';
-import { CustomCell } from './productCell.component';
-import { ProductResponse } from '@b2b-app-mfe/services';
+import { OrderItemCell } from './OrderItemCell.component';
 import { Loading } from '@b2b-app-mfe/common-components';
+import { OrderItemResponse } from '@b2b-app-mfe/services';
 
 type TableProps<T extends object> = {
   columns: ReadonlyArray<Column<T>>;
@@ -141,9 +141,9 @@ function DataTable<T extends object>({
                     fontSize={12}
                     className={cell.column.id}
                   >
-                    <CustomCell
+                    <OrderItemCell
                       column={cell.column.Header}
-                      data={row.original as ProductResponse}
+                      data={row.original as OrderItemResponse}
                       value={cell.render('Cell')}
                       row={row}
                     />

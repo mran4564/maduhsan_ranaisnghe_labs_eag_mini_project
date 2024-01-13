@@ -35,7 +35,6 @@ const Login = () => {
 
   useEffect(() => {
     if (error) {
-      console.log(error);
       toast({
         position: 'bottom-right',
         description: error,
@@ -51,14 +50,6 @@ const Login = () => {
     if (result) {
       setSessionDataLogin({ ...result.data, email });
       navigate('/b2b-app');
-    }
-    if (error) {
-      toast({
-        position: 'bottom-right',
-        description: error,
-        status: 'error',
-        isClosable: true,
-      });
     }
   };
 

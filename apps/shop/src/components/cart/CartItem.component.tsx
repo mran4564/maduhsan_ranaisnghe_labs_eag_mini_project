@@ -20,7 +20,8 @@ type CartItemProps = {
   onChangeQuantity?: (
     quantity: number,
     cartItemId: string,
-    price: number
+    price: number,
+    productId: string
   ) => void;
   removeFromCart: () => void;
   onClickGiftWrapping?: () => void;
@@ -141,7 +142,12 @@ export const CartItem = (props: CartItemProps) => {
 
   const handleQuantityChange = (newQuantity: number) => {
     if (product) {
-      props.onChangeQuantity?.(newQuantity, props.cartItemId, product.price);
+      props.onChangeQuantity?.(
+        newQuantity,
+        props.cartItemId,
+        product.price,
+        product.productId
+      );
     }
   };
 

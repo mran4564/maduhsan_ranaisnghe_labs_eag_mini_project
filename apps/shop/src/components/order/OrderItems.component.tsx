@@ -1,8 +1,8 @@
-import { OrderItemResponseDto } from '@b2b-app-mfe/services';
+import { OrderItemResponse } from '@b2b-app-mfe/services';
 import { Box, Text } from '@chakra-ui/react';
 
 type OrderItemsProps = {
-  orderItems: OrderItemResponseDto[];
+  orderItems: OrderItemResponse[];
 };
 
 const OrderItems = ({ orderItems }: OrderItemsProps) => {

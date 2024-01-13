@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { CartSlice } from 'global-store/Module';
 import { UserRoleEnum } from './Main.component';
 import { loadSession } from '@b2b-app-mfe/services';
+import SearchBar from './SearchBar.component';
 
 interface Props {
   children: React.ReactNode;
@@ -93,10 +94,11 @@ export default function Navbar() {
             ))}
           </HStack>
         </HStack>
+        <SearchBar />
         <Flex alignItems={'center'}>
           {userRole === UserRoleEnum.CUSTOMER ? (
             <Box mr={'8'}>
-              <button onClick={showCart}>
+              <button id="cart-button" onClick={showCart}>
                 <FaShoppingCart size={16} />
               </button>
             </Box>

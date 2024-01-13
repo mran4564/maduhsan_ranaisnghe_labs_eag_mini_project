@@ -29,6 +29,7 @@ import { OrderSummaryModal } from './ReciptModal.component';
 
 const CartDrawer = () => {
   const { cartStatus, hideCart } = CartSlice();
+  const toast = useToast();
   const [cartDetails, setCartDetails] = useState<CartResponse>({
     cartItems: [],
     cartId: '',
@@ -45,11 +46,8 @@ const CartDrawer = () => {
       },
     });
 
-  const toast = useToast();
-
   useEffect(() => {
     if (data) {
-      console.log(data);
       setCartDetails(data);
     }
   }, [data]);
@@ -58,6 +56,7 @@ const CartDrawer = () => {
     if (cartStatus) {
       getData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartStatus]);
 
   useEffect(() => {
@@ -69,26 +68,8 @@ const CartDrawer = () => {
         isClosable: true,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
-
-  const updateCartItemQuantity = (
-    value: number,
-    cartItemId: string,
-    price: number
-  ) => {
-    console.log(value, cartItemId);
-    const cartItemUpdate: updateCartItemRequestDto = {
-      quantity: value,
-      unitPrice: price,
-    };
-    updateItem(cartItemId, cartItemUpdate);
-    setTimeout(() => {}, 1000);
-  };
-
-  const removeCartItem = (cartItemId: string) => {
-    deleteItem(cartItemId);
-    setTimeout(() => {}, 1000);
-  };
 
   const openOrderModal = () => {
     setModalOpen(true);
@@ -99,6 +80,24 @@ const CartDrawer = () => {
     setModalOpen(false);
   };
 
+  const updateCartItemQuantity = (
+    value: number,
+    cartItemId: string,
+    price: number,
+    productId: string
+  ) => {
+    const cartItemUpdate: updateCartItemRequestDto = {
+      quantity: value,
+      unitPrice: price,
+      productId,
+    };
+    updateItem(cartItemId, cartItemUpdate);
+  };
+
+  const removeCartItem = (cartItemId: string) => {
+    deleteItem(cartItemId);
+  };
+
   const submitOrder = async () => {
     const orderRequest: CreateOrderRequest = {
       customerId: cartDetails.customerId,
@@ -106,7 +105,6 @@ const CartDrawer = () => {
         const orderItem: OrderItemRequest = {
           productId: cartItem.productId,
           unitPrice: cartItem.unitPrice,
-          supplierId: userId,
           quantity: cartItem.quantity,
         };
         return orderItem;
@@ -128,7 +126,6 @@ const CartDrawer = () => {
           <DrawerHeader fontSize="xl" fontWeight="bold">
             Shopping Cart ({cartDetails.cartItems.length} items)
           </DrawerHeader>
-
           <DrawerBody>
             <Box height="100%" position="relative">
               {/* Loading Spinner (conditionally rendered) */}

@@ -48,7 +48,6 @@ const ProductPreviewDrawer = ({
   const toast = useToast();
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setProductStatus(event.target.value);
-    console.log(productStatus);
   };
 
   useEffect(() => {

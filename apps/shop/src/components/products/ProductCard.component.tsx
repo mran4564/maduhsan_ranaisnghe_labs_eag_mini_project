@@ -58,7 +58,7 @@ const ProductCard = ({ product }: Props) => {
       <CardBody p={2} height={250}>
         <Image
           width={220}
-          src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+          src={product.imageUrl}
           alt="Green double couch with wooden legs"
           borderRadius={5}
         />
@@ -87,29 +87,6 @@ const ProductCard = ({ product }: Props) => {
             </Button>
           )}
         </ButtonGroup>
-        {/* <Box>
-          {product.inStock ? (
-            <Box
-              display="inline-block"
-              padding="1"
-              boxShadow={'sm'}
-              borderRadius="5"
-              bg={'green.200'}
-            >
-              <Text fontSize={8}>Available</Text>
-            </Box>
-          ) : (
-            <Box
-              display="inline-block"
-              padding="1"
-              boxShadow={'sm'}
-              borderRadius="5"
-              bg={'red.200'}
-            >
-              <Text fontSize={8}>Not Available</Text>
-            </Box>
-          )}
-        </Box> */}
       </CardFooter>
     </Card>
   );
