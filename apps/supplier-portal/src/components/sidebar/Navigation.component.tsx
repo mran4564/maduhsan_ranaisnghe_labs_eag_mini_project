@@ -17,6 +17,14 @@ const items: CategoryItem[] = [
     path: '/b2b-app/products',
   },
   {
+    label: 'Orders',
+    path: '/b2b-app/orders',
+  },
+  {
+    label: 'Products',
+    path: '/b2b-app/products',
+  },
+  {
     label: 'New Product',
     path: '/b2b-app/new-product',
   },
