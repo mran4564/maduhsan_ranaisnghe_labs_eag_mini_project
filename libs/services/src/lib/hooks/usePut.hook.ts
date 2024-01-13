@@ -1,11 +1,7 @@
 import { useState } from 'react';
-import axios, { AxiosError } from 'axios';
-import { getErrorMessage } from './usePost.hook';
+import axios from 'axios';
+import { getErrorMessage } from '../utils/errors';
 import api from '../utils/interceptor.api';
-
-interface ErrorResponse {
-  message: string;
-}
 
 export const usePut = (endpoint: string) => {
   const [error, setError] = useState<string>('');
@@ -26,13 +22,13 @@ export const usePut = (endpoint: string) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<ErrorResponse>;
-
-        setError((prevError) => {
-          if (axiosError.response?.data.message) {
-            return axiosError.response.data.message;
+        setError(() => {
+          if (err.response?.data.errors) {
+            const errors = err.response?.data.errors;
+            return errors[0].message;
           } else {
-            return axiosError.message;
+            const errorMessage = getErrorMessage(err.response!);
+            return errorMessage;
           }
         });
       } else {

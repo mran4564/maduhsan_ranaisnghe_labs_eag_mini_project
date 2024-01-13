@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import api from '../utils/interceptor.api';
-import { ErrorResponse, getErrorMessage } from './usePost.hook';
+import { getErrorMessage } from '../utils/errors';
 
 export const usePostWithCredentials = (endpoint: string) => {
   const [error, setError] = useState<string>('');
@@ -23,13 +23,13 @@ export const usePostWithCredentials = (endpoint: string) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<ErrorResponse>;
-
-        setError((prevError) => {
-          if (axiosError.response?.data.message) {
-            return axiosError.response.data.message;
+        setError(() => {
+          if (err.response?.data.errors) {
+            const errors = err.response?.data.errors;
+            return errors[0].message;
           } else {
-            return axiosError.message;
+            const errorMessage = getErrorMessage(err.response!);
+            return errorMessage;
           }
         });
       } else {

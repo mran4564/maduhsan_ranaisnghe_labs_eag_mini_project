@@ -4,6 +4,7 @@ export * from './lib/constants/api.constants';
 export * from './lib/utils/interceptor.api';
 export * from './lib/utils/sessionData.api';
 export * from './lib/types/auth.type';
+export * from './lib/utils/errors';
 
 export * from './lib/hooks/useData.hook';
 export * from './lib/hooks/usePost.hook';
@@ -23,3 +24,6 @@ export * from './lib/hooks/useCart.hook';
 
 export * from './lib/types/order.type';
 export * from './lib/hooks/useOrders.hook';
+
+export * from './lib/types/orderItem.type';
+export * from './lib/hooks/useOrderItems.hook';

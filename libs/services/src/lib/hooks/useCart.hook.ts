@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import axios, { AxiosError, AxiosRequestConfig, CanceledError } from 'axios';
+import axios, { AxiosRequestConfig, CanceledError } from 'axios';
 import { CART_API } from '../constants/api.constants';
 import { CartApi, updateCartItemRequestDto } from '../types/cart.type';
 import { CreateOrderRequest, OrderApi } from '../types/order.type';
-import { ErrorResponse, getErrorMessage } from './usePost.hook';
+import { getErrorMessage } from '../utils/errors';
 import api from '../utils/interceptor.api';
 
 export const UseCart = <T>(
@@ -26,7 +26,6 @@ export const UseCart = <T>(
         })
         .then((res) => {
           setData(res.data);
-          console.log(res);
           setLoading(false);
         })
         .catch((err) => {
@@ -127,13 +126,13 @@ export const UseCart = <T>(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<ErrorResponse>;
-
-        setError((prevError) => {
-          if (axiosError.response?.data.message) {
-            return axiosError.response.data.message;
+        setError(() => {
+          if (err.response?.data.errors) {
+            const errors = err.response?.data.errors;
+            return errors[0].message;
           } else {
-            return axiosError.message;
+            const errorMessage = getErrorMessage(err.response!);
+            return errorMessage;
           }
         });
       } else {

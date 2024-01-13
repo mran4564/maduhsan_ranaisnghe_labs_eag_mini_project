@@ -35,6 +35,7 @@ export const useData = <T>(
     const configs: AxiosRequestConfig = {
       ...requestConfig,
       params: {
+        ...requestConfig?.params,
         page: newPageNo,
         status: status,
       },
