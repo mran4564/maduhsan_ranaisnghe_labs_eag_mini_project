@@ -1,11 +1,12 @@
-package org.b2b_system.order.exception;
+package org.b2b_system.cart.exception;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.b2b_system.order.common.Constants;
+import org.b2b_system.cart.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-public class ApplicationExceptionHandler  {
+public class ApplicationExceptionHandler {
 
     Logger logger = LoggerFactory.getLogger(ApplicationExceptionHandler.class);
 
@@ -36,7 +37,8 @@ public class ApplicationExceptionHandler  {
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-    public ResponseEntity<Object> handleUserAlreadyExistsException(EntityAlreadyExistsException e, HttpServletRequest request) {
+    public ResponseEntity<Object> handleUserAlreadyExistsException(EntityAlreadyExistsException e,
+                                                                   HttpServletRequest request) {
         return new ResponseEntity<>(
                 ErrorResponse.builder()
                         .status(HttpStatus.CONFLICT)
@@ -44,6 +46,18 @@ public class ApplicationExceptionHandler  {
                         .uri(request.getRequestURI())
                         .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
                         .build(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Object> handleDatabaseAccessException(DataAccessException e,
+                                                                HttpServletRequest request) {
+        return new ResponseEntity<>(
+                ErrorResponse.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .message(Constants.DATABASE_ACCESS_EXCEPTION_MESSAGE)
+                        .uri(request.getRequestURI())
+                        .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
+                        .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(NoSuchElementFoundException.class)
@@ -60,6 +74,21 @@ public class ApplicationExceptionHandler  {
                         .build(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(InternalException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Object> handleInternalException(InternalException e,
+                                                          HttpServletRequest request) {
+        logger.error("Internal Server error occurred with request", e);
+        return new ResponseEntity<>(
+                ErrorResponse.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .message(e.getMessage())
+                        .uri(request.getRequestURI())
+                        .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
+                        .build(), HttpStatus.NOT_FOUND);
+    }
+
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleUnknownException(Exception e, HttpServletRequest request) {
@@ -75,10 +104,9 @@ public class ApplicationExceptionHandler  {
         return new ResponseEntity<>(
                 ErrorResponse.builder()
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .message(Constants.UNEXPECTED_ERROR_OCCURRED_MESSAGE)
+                        .message(Constants.UNEXPECTED_ERROR_OCCURRED)
                         .uri(request.getRequestURI())
                         .timeStamp(ZonedDateTime.now(ZoneId.of("Z")))
                         .build(), HttpStatus.BAD_REQUEST);
     }
-
 }

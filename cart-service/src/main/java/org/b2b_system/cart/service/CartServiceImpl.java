@@ -105,7 +105,7 @@ public class CartServiceImpl implements CartService {
                     var cartItemIsExists =
                             cart.getCartItems().stream().anyMatch(cartItem -> cartItem.getProductId().equals(request.getProductId()));
                     if (cartItemIsExists) {
-                        throw new EntityExistsException("Product with %s id is already in the cart".formatted(request.getProductId()));
+                        throw new EntityExistsException("Product  is already in the cart");
                     }
                     cart.addCartItems(mapRequestToCartItem(request, cart));
                     var updatedCart = cartRepository.save(cart);
