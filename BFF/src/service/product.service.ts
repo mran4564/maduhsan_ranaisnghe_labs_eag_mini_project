@@ -1,0 +1,63 @@
+import axios from 'axios';
+import { Request } from 'express';
+import {
+  PageResponse,
+  ProductApproveRequest,
+  ProductCreateDTO,
+  ProductResponse,
+  ProductUpdateDTO,
+} from '../model/product.model';
+import config from '../config/config';
+
+class ProductService {
+  async createProduct(productDTO: ProductCreateDTO) {
+    const supplierData = await axios.get(config.userApi + `/${productDTO.supplierId}`);
+    const { name } = supplierData.data;
+    productDTO.brandName = name;
+    const result = await axios.post(config.productApi, productDTO);
+    return result;
+  }
+  async getProducts(req: Request) {
+    const { page, size, category_id, brand_name, in_stock, status } = req.query;
+    const response = await axios.get(config.productApi, {
+      params: {
+        page,
+        size,
+        category_id,
+        brand_name,
+        in_stock,
+        status,
+      },
+    });
+    const responseData: PageResponse<ProductResponse> = {
+      content: response.data.content,
+      pageSize: response.data.size,
+      currentPage: response.data.pageable.pageNumber,
+      totalElements: response.data.totalElements,
+      totalPages: response.data.totalPages,
+    };
+    return responseData;
+  }
+
+  async getProductById(productId: string) {
+    const response = await axios.get(config.productApi + `/${productId}`);
+    return response.data;
+  }
+
+  async updateProduct(productId: string, productDTO: ProductUpdateDTO) {
+    const result = await axios.put(config.productApi + `/${productId}`, productDTO);
+    return result.data;
+  }
+
+  async approveProduct(productId: string, approveRequest: ProductApproveRequest) {
+    const result = await axios.patch(config.productApi + `/${productId}`, approveRequest);
+    return result.data;
+  }
+
+  async deleteProduct(productId: string) {
+    const result = await axios.delete(config.productApi + `/${productId}`);
+    return result.data;
+  }
+}
+
+export default ProductService;
