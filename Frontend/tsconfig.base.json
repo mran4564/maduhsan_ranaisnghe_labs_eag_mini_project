@@ -1,0 +1,30 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@b2b-app-mfe/common-components": ["libs/common-components/src/index.ts"],
+      "@b2b-app-mfe/services": ["libs/services/src/index.ts"],
+      "auth/Module": ["apps/auth/src/remote-entry.ts"],
+      "data-steward-portal/Module": [
+        "apps/data-steward-portal/src/remote-entry.ts"
+      ],
+      "global-store/Module": ["apps/global-store/src/remote-entry.ts"],
+      "shop/Module": ["apps/shop/src/remote-entry.ts"],
+      "supplier-portal/Module": ["apps/supplier-portal/src/remote-entry.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
