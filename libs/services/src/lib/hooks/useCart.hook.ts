@@ -30,7 +30,19 @@ export const UseCart = <T>(
         })
         .catch((err) => {
           if (err instanceof CanceledError) return;
-          setError(err.message);
+          if (axios.isAxiosError(err)) {
+            setError(() => {
+              if (err.response?.data.errors) {
+                const errors = err.response?.data.errors;
+                return errors[0].message;
+              } else {
+                const errorMessage = getErrorMessage(err.response!);
+                return errorMessage;
+              }
+            });
+          } else {
+            setError((prevError) => err.message);
+          }
           setLoading(false);
         });
     },
@@ -51,7 +63,19 @@ export const UseCart = <T>(
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
-        setError(err.message);
+        if (axios.isAxiosError(err)) {
+          setError(() => {
+            if (err.response?.data.errors) {
+              const errors = err.response?.data.errors;
+              return errors[0].message;
+            } else {
+              const errorMessage = getErrorMessage(err.response!);
+              return errorMessage;
+            }
+          });
+        } else {
+          setError((prevError) => err.message);
+        }
         setLoading(false);
       });
   };
@@ -71,7 +95,19 @@ export const UseCart = <T>(
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
-        setError(err.message);
+        if (axios.isAxiosError(err)) {
+          setError(() => {
+            if (err.response?.data.errors) {
+              const errors = err.response?.data.errors;
+              return errors[0].message;
+            } else {
+              const errorMessage = getErrorMessage(err.response!);
+              return errorMessage;
+            }
+          });
+        } else {
+          setError((prevError) => err.message);
+        }
         setLoading(false);
       });
   };
@@ -88,7 +124,19 @@ export const UseCart = <T>(
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
-        setError(err.message);
+        if (axios.isAxiosError(err)) {
+          setError(() => {
+            if (err.response?.data.errors) {
+              const errors = err.response?.data.errors;
+              return errors[0].message;
+            } else {
+              const errorMessage = getErrorMessage(err.response!);
+              return errorMessage;
+            }
+          });
+        } else {
+          setError((prevError) => err.message);
+        }
         setLoading(false);
       });
   };
@@ -105,7 +153,19 @@ export const UseCart = <T>(
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
-        setError(err.message);
+        if (axios.isAxiosError(err)) {
+          setError(() => {
+            if (err.response?.data.errors) {
+              const errors = err.response?.data.errors;
+              return errors[0].message;
+            } else {
+              const errorMessage = getErrorMessage(err.response!);
+              return errorMessage;
+            }
+          });
+        } else {
+          setError((prevError) => err.message);
+        }
         setLoading(false);
       });
   };

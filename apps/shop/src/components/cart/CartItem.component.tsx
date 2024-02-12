@@ -142,12 +142,21 @@ export const CartItem = (props: CartItemProps) => {
 
   const handleQuantityChange = (newQuantity: number) => {
     if (product) {
-      props.onChangeQuantity?.(
-        newQuantity,
-        props.cartItemId,
-        product.price,
-        product.productId
-      );
+      if (parseInt(product.stockCount) < newQuantity) {
+        toast({
+          position: 'bottom-right',
+          description: 'Insufficient Stock',
+          status: 'error',
+          isClosable: true,
+        });
+      } else {
+        props.onChangeQuantity?.(
+          newQuantity,
+          props.cartItemId,
+          product.price,
+          product.productId
+        );
+      }
     }
   };
 

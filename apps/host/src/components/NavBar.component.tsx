@@ -94,7 +94,8 @@ export default function Navbar() {
             ))}
           </HStack>
         </HStack>
-        <SearchBar />
+        {userRole === UserRoleEnum.CUSTOMER ?? <SearchBar />}
+
         <Flex alignItems={'center'}>
           {userRole === UserRoleEnum.CUSTOMER ? (
             <Box mr={'8'}>
